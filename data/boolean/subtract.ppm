@@ -1,0 +1,23 @@
+// Description: Box with through-hole via Thickness(Circle, t)
+// Author: Tim Olson
+// Date: 2025-09-05
+
+Units(1[in]);
+
+Input(X, Y, Z, HoleR);
+X = Parameter("Box X", 4, LINEAR, GreaterThan(0));
+Y = Parameter("Box Y", 3, LINEAR, GreaterThan(0));
+Z = Parameter("Box Z", 2, LINEAR, GreaterThan(0));
+HoleR = Parameter("Hole Radius", 0.5, LINEAR, GreaterThan(0));
+
+// Base box (corner at origin)
+box = Box(0, 0, 0, X, Y, Z);
+
+// Make a "tube" by thickening a circle along +Z
+c2d   = Circle(HoleR);
+tube  = Thickness(c2d, Z + 2*HoleR);        // a bit longer than the box
+tube1 = Move(tube, X/2, Y/2, -HoleR);       // center in XY; extend past Z
+
+result = BooleanSubtract(box, tube1);
+
+Output(result);
