@@ -1,0 +1,30 @@
+// File: fhickness.ppm
+// Description: Demonstrate Thickness() by making a cylinder from a 2D circle.
+// Author: Tim Olson
+// Date: September 5, 2025
+ 
+Units(1[in]);  // work in inches
+
+// ---- Function-style interface ----
+Input(Radius, Height);
+
+// ---- UI parameters with defaults & constraints ----
+Radius = Parameter("Radius", 0.5, LINEAR, GreaterThan(0));   // cylinder radius
+Height = Parameter("Height", 1.0, LINEAR, GreaterThan(0));   // extrude distance along +Z
+
+// ---- 2D profile at the origin (XY plane) ----
+// Circle is centered at (0,0); no move needed unless you want to offset it.
+c2d = Circle(Radius);
+
+// ---- Create the 3D solid ----
+// Thickness(profile2D, distance) pushes the profile along +Z by 'distance' and caps it.
+// Result is equivalent to a cylinder of Radius and Height.
+cyl = Thickness(c2d, Height);
+
+// Set material/color after creation, e.g.:
+cyl = SetProperties(cyl, "PenColor" = 0x00, "Material" = "Aluminum");
+
+// ---- Return result ----
+Output(cyl);
+
+ 
