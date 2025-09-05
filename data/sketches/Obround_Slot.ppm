@@ -1,0 +1,35 @@
+// Obround_Slot_2D.ppm
+// Description: Rectangle with semicircular ends.  Creates a closed 2D “slot” (rectangle with semicircular ends) that you can use directly or later extrude/sweep.
+// Author: Tim Olson
+// Date: September 5, 2025
+// Notes: Save as Obround_Slot_2D.ppm. Units are inches by default. For a true obround, keep Length ≥ Width (engine doesn’t enforce cross-parameter constraints).
+
+
+Units(1[in]); // work in inches
+
+// ---- Parameters shown in the Properties dialog ----
+L = Parameter("Length", 6, LINEAR, Interval(0.1, 1000));   // overall length (X)
+W = Parameter("Width",  2, LINEAR, Interval(0.1, 1000));   // overall width (Y)
+
+// ---- Geometry helpers ----
+R  = W/2;            // end radius for true obround
+LX = L - R;          // x of right end-circle center
+RX = R;              // x of left  end-circle center
+Y0 = 0;              // bottom
+Y1 = W;              // top
+CY = R;              // y of both end-circle centers
+
+// ---- Build the closed polyline with two 180° arcs ----
+// Start at bottom-left tangent, run clockwise around the slot.
+slot2D = Polyline(
+  Point(R, Y0),                    // 1) bottom-left tangent
+  Point(L - R, Y0),                // 2) bottom-right tangent
+  Arc1(L - R, CY, R),              // 3) right semicircle, CCW, bottom→top
+  Point(L - R, Y1),                // 4) top-right tangent
+  Point(R, Y1),                    // 5) top-left  tangent
+  Arc1(R, CY, R),                  // 6) left semicircle, CCW, top→bottom
+  Point(R, Y0)                     // 7) close
+);
+
+// ---- Output the 2D profile ----
+Output(slot2D);
