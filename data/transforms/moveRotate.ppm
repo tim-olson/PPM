@@ -1,0 +1,25 @@
+// Description: Move + RotateZ demo on a 2D triangle
+// Author: Tim Olson
+// Date: 2025-09-05
+
+Units(1[in]);
+
+Input(S, ang, dx, dy);
+S   = Parameter("Size", 2, LINEAR, GreaterThan(0));
+ang = Parameter("Rotate Angle", 30, ANGULAR);
+dx  = Parameter("Move X", 3, LINEAR);
+dy  = Parameter("Move Y", 1, LINEAR);
+
+// Base triangle at origin
+tri0 = Polyline(
+  Point(0,0),
+  Point(S,0),
+  Point(0,S),
+  Point(0,0)
+);
+
+// Move, then rotate about (dx,dy)
+tri1 = Move(tri0, dx, dy, 0);
+tri2 = RotateZ(tri1, ang, dx, dy);
+
+Output(tri0, tri2);
