@@ -1,0 +1,24 @@
+
+// Description: Extrude a rectangular 2D profile into a 3D solid
+// Author: Tim Olson
+// Date: 2025-09-05
+
+Units(1[in]);
+
+Input(W, H, Z);
+W = Parameter("Rect Width",  4, LINEAR, GreaterThan(0));
+H = Parameter("Rect Height", 3, LINEAR, GreaterThan(0));
+Z = Parameter("Extrude Height", 1, LINEAR, GreaterThan(0));
+
+// Closed rectangle profile (0,0) to (W,H)
+rect2D = Polyline(
+  Point(0,0),
+  Point(W,0),
+  Point(W,H),
+  Point(0,H),
+  Point(0,0)
+);
+
+solid = Extrude(rect2D, Z);
+
+Output(solid);
