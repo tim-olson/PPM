@@ -1,4 +1,4 @@
-// Description: Box with through-hole via Thickness(Circle, t) — no Box() macro
+// Description: Example Subtract boolean with rectangle with through-hole subtracted 
 // Author: Tim Olson
 // Date: 2025-09-05
 // Confirmed : +1
