@@ -1,0 +1,27 @@
+// File: Cone.ppm
+// Description: Parametric cone / frustum using built-in Cone(H, Rbase, Rtop)
+// Author: Tim Olson
+// Date: 2025-09-06
+
+Units(1[in]);  // working units
+
+// ---------- Inputs ----------
+Input(Rbase, H, Rtop, Cx, Cy, Z0);
+
+// Sizes
+Rbase = Parameter("Base Radius", 1.0, LINEAR, GreaterThan(0));
+H     = Parameter("Height",      3.0, LINEAR, GreaterThan(0));
+// Top radius: 0 => true cone; must be < Rbase for a taper inward
+Rtop  = Parameter("Top Radius",  0.0, LINEAR, Interval(0, Rbase - 0.001));
+
+// Placement (base center and base Z elevation)
+Cx    = Parameter("Base Center X", 0.0, LINEAR);
+Cy    = Parameter("Base Center Y", 0.0, LINEAR);
+Z0    = Parameter("Base Z",        0.0, LINEAR);
+
+// ---------- Build ----------
+rawCone = Cone(H, Rbase, Rtop);     // base at Z=0, axis along +Z
+cone    = Move(rawCone, Cx, Cy, Z0); // place in space
+
+// ---------- Output ----------
+Output(cone);
