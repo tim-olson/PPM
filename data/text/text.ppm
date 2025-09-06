@@ -2,6 +2,7 @@
 // Description: Place styled text with color parameter
 // Author: Tim Olson
 // Date: 2025-09-05
+// Confirmed: +1
 
 // Expose as a callable macro with 3 inputs:
 Input(clr, fnt, txt);   // 1) declare expected inputs: color, font, text
@@ -13,8 +14,6 @@ txt = Parameter("Text", "Hello World", TEXT); // default text
 
 // Use the inputs in geometry:
 s0 = Text(txt, TextFont(0, 1, 0, fnt), TextStyle(CENTER, MIDDLE, ITALIC));
-s0 = Move(s0, 3.5, 1.0, 0);   // put left-baseline at (3.5, 1.0)
-s1 = SetProperties(s0, "PenColor" = clr);
 
-// Return result(s):
-Output(s1);
+// Return result:
+Output(s0);
