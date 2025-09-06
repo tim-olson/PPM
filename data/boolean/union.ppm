@@ -1,0 +1,39 @@
+// File: Boolean_Add_Boxes.ppm
+// Description: Demonstrate BooleanUnion(a, b) by adding two offset boxes into one solid.
+//Author: Tim Olson
+//Date: September 5, 2025
+//Notes: Save as Boolean_Add_Boxes.ppm. Defaults ensure overlap so the union is a single L-shaped solid. Units are inches.
+
+Units(1[in]);  // inches
+
+// ---- Optional macro interface ----
+Input(X1, Y1, Z1, X2, Y2, Z2, dx, dy, dz);
+
+// ---- UI parameters (defaults & constraints) ----
+X1 = Parameter("Box1 X", 3.0, LINEAR, GreaterThan(0));
+Y1 = Parameter("Box1 Y", 2.0, LINEAR, GreaterThan(0));
+Z1 = Parameter("Box1 Z", 1.0, LINEAR, GreaterThan(0));
+
+X2 = Parameter("Box2 X", 2.0, LINEAR, GreaterThan(0));
+Y2 = Parameter("Box2 Y", 2.0, LINEAR, GreaterThan(0));
+Z2 = Parameter("Box2 Z", 1.0, LINEAR, GreaterThan(0));
+
+// Offset of Box2 relative to origin; defaults create overlap
+dx = Parameter("Box2 Offset X", 1.0, LINEAR);
+dy = Parameter("Box2 Offset Y", 0.5, LINEAR);
+dz = Parameter("Box2 Offset Z", 0.3, LINEAR);
+
+// ---- Build source solids ----
+// Box1 from (0,0,0) to (X1,Y1,Z1)
+A = Box(0, 0, 0,  X1, Y1, Z1);
+
+// Box2 from (dx,dy,dz) to (dx+X2, dy+Y2, dz+Z2)
+B = Box(dx, dy, dz,  dx + X2, dy + Y2, dz + Z2);
+
+// ---- Boolean Add (Union) ----
+U = BooleanUnion(A, B);
+
+// ---- Output result ----
+Output(U);
+
+ 
