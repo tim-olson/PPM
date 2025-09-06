@@ -1,30 +1,32 @@
 // File: Boolean_Intersect_BoxSphere.ppm
-// Description: Show how to use BooleanIntersect() with simple primitives.
+// Description: BooleanIntersect between a rectangular prism and a sphere (no macros)
 // Author: Tim Olson
-
+// Date: 2025-09-05
 
 Units(1[in]);  // work in inches
 
-// ---- Function-style interface (optional for macro use) ----
+// ---- Parameters ----
 Input(X, Y, Z, R);
+X = Parameter("Box X", 4, LINEAR, GreaterThan(0));  // length (X)
+Y = Parameter("Box Y", 3, LINEAR, GreaterThan(0));  // width  (Y)
+Z = Parameter("Box Z", 2, LINEAR, GreaterThan(0));  // height (Z)
 
-// ---- UI parameters with defaults & constraints ----
-X = Parameter("Box X", 4, LINEAR, GreaterThan(0));          // box length (X)
-Y = Parameter("Box Y", 3, LINEAR, GreaterThan(0));          // box width  (Y)
-Z = Parameter("Box Z", 2, LINEAR, GreaterThan(0));          // box height (Z)
-
-// Choose R > min(X,Y,Z)/2 to guarantee the sphere protrudes beyond at least one face.
-// With 4×3×2, min/2 = 1.0, so 1.25 gives a clean partial clip.
+// Choose R > min(X,Y,Z)/2 for a clean overlap
 R = Parameter("Sphere Radius", 1.25, LINEAR, GreaterThan(0));
 
-// ---- Create the two source solids ----
-A = Box(0, 0, 0,  X, Y, Z);                      // axis-aligned box at origin
+// ---- Build box directly (no Box macro) ----
+// Rectangle takes (width, height, [cx, cy]); centering at (X/2, Y/2) makes corners (0,0)-(X,Y)
+profile2D = Rectangle(X, Y, X/2, Y/2);
 
-// Center sphere inside the box; radius makes it extend beyond the box
-B = Sphere(R,  X/2, Y/2, Z/2);
+// Prism in +Z by Z
+A = Thickness(profile2D, Z);
 
-// ---- Boolean Intersect: keep only the overlapping volume ----
+// ---- Build & place sphere ----
+B0 = Sphere(R);                         // sphere at origin
+B  = Move(B0, X/2, Y/2, Z/2);           // center inside the box
+
+// ---- Boolean Intersect: keep only overlap ----
 I = BooleanIntersect(A, B);
 
-// ---- Output result ----
+// ---- Output ----
 Output(I);
