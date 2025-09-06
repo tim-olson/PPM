@@ -21,9 +21,6 @@ c2d = Circle(Radius);
 // Result is equivalent to a cylinder of Radius and Height.
 cyl = Thickness(c2d, Height);
 
-// Set material/color after creation, e.g.:
-cyl = SetProperties(cyl, "PenColor" = 0x00, "Material" = "Aluminum");
-
 // ---- Return result ----
 Output(cyl);
 
