@@ -4,19 +4,17 @@
 // Date: 2025-09-06
 // Confirmed: +1
 
- 
 
 Units(1[in]);  // Work in inches
 
 // ---------------- Parameters ----------------
 Input(W, H, R, E);
 
-W = Parameter("Width (X)",   4.0, LINEAR, GreaterThan(0));  // rectangle X extent
-H = Parameter("Height (Y)",  3.0, LINEAR, GreaterThan(0));  // rectangle Y extent
+W = Parameter("Width (X)",     4.0, LINEAR, GreaterThan(0));
+H = Parameter("Height (Y)",    3.0, LINEAR, GreaterThan(0));
 R = Parameter("Circle Radius", 0.25, LINEAR, GreaterThan(0));
 
-// Offset of circle centers in from each edge (same X/Y).
-// Keep centers at least R away from each edge so circles stay inside.
+// Keep each center at least R inside the rectangle
 E = Parameter(
       "Edge Offset (from each side)",
       0.5,
@@ -24,27 +22,22 @@ E = Parameter(
       Interval(R + 0.01, min(W, H) - R - 0.01)
     );
 
-// ---------------- Build the rectangle outline (closed) ----------------
+// ---------------- Rectangle outline (closed polyline) ----------------
 rect2D = Polyline(
   Point(0, 0),
   Point(W, 0),
   Point(W, H),
   Point(0, H),
-  Point(0, 0)     // close loop
+  Point(0, 0)
 );
 
-// ---------------- Create the four corner circles ----------------
-c1 = Circle(R);               // base circle at (0,0)
-c1 = Move(c1,      E,      E, 0);        // bottom-left
+// ---------------- Circles (2D move uses TWO args: dx, dy) ----------------
+c0 = Circle(R);               // base circle centered at origin
 
-c2 = Circle(R);
-c2 = Move(c2,  W - E,      E, 0);        // bottom-right
+c1 = Move(c0,      E,      E);     // bottom-left
+c2 = Move(c0,  W - E,      E);     // bottom-right
+c3 = Move(c0,  W - E,  H - E);     // top-right
+c4 = Move(c0,      E,  H - E);     // top-left
 
-c3 = Circle(R);
-c3 = Move(c3,  W - E,  H - E, 0);        // top-right
-
-c4 = Circle(R);
-c4 = Move(c4,      E,  H - E, 0);        // top-left
-
-// ---------------- Output all 2D entities ----------------
+// ---------------- Output ----------------
 Output(rect2D, c1, c2, c3, c4);
