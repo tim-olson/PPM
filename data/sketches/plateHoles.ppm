@@ -1,0 +1,65 @@
+// File: Rect_With_Corner_Holes.ppm
+// Description: Extruded rectangle with four corner through-holes  
+// Author: Tim Olson
+// Date: 2025-09-06
+
+Units(1[in]);  // Work in inches
+
+// ---------------- Parameters ----------------
+Input(X, Y, Z, HoleR, E);
+
+// Block overall size
+X = Parameter("Length X", 4.0, LINEAR, GreaterThan(0));   // rectangle extent in X
+Y = Parameter("Width  Y", 3.0, LINEAR, GreaterThan(0));   // rectangle extent in Y
+Z = Parameter("Height Z", 1.0, LINEAR, GreaterThan(0));   // extrusion height (+Z)
+
+// Hole radius
+HoleR = Parameter("Hole Radius", 0.1875, LINEAR, GreaterThan(0));  // e.g., 3/16"
+
+// Offset of hole centers from each edge (same for X & Y)
+// Constrain so each center stays inside by at least HoleR.
+E = Parameter(
+      "Corner Offset (from edges)",
+      0.5,                                  // default edge offset
+      LINEAR,
+      Interval(HoleR + 0.01, min(X, Y) - HoleR - 0.01)
+    );
+
+// ---------------- Build the solid block ----------------
+// Closed rectangle profile from (0,0) to (X,Y)
+rect2D = Polyline(
+  Point(0, 0),
+  Point(X, 0),
+  Point(X, Y),
+  Point(0, Y),
+  Point(0, 0)     // close loop
+);
+
+// Extrude the 2D rectangle along +Z by height Z
+block = Thickness(rect2D, Z);
+
+// ---------------- Create one long cylinder for drilling ----------------
+// Start with a circle of radius HoleR at the origin (Z=0)
+c2d   = Circle(HoleR);
+
+// Make a tube a bit longer than the block height to guarantee a clean cut
+longZ = Z + 2 * HoleR;              // extend by 1 radius above & below
+tube0 = Thickness(c2d, longZ);
+
+// ---------------- Position 4 copies at the corner offsets ----------------
+// Corner center coordinates:
+//  (E, E), (X-E, E), (X-E, Y-E), (E, Y-E)
+// Shift each down by HoleR so the tube spans from Z=-HoleR to Z=Z+HoleR
+t1 = Move(tube0,      E,      E, -HoleR);
+t2 = Move(tube0,  X - E,      E, -HoleR);
+t3 = Move(tube0,  X - E,  Y - E, -HoleR);
+t4 = Move(tube0,      E,  Y - E, -HoleR);
+
+// ---------------- Subtract holes (sequential subtraction) ----------------
+tmp1 = BooleanSubtract(block, t1);
+tmp2 = BooleanSubtract(tmp1, t2);
+tmp3 = BooleanSubtract(tmp2, t3);
+result = BooleanSubtract(tmp3, t4);
+
+// ---------------- Output ----------------
+Output(result);
