@@ -19,6 +19,6 @@ rect2D = Polyline(
   Point(0,0)
 );
 
-solid = Thickness(rect2D, Z);
+extruded_solid = Thickness(rect2D, Z);
 
-Output(solid);
+Output(extruded_solid);
