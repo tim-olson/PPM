@@ -2,6 +2,7 @@
 // Description: Demonstrate Thickness() by making a cylinder from a 2D circle.
 // Author: Tim Olson
 // Date: September 5, 2025
+// Confirmed: +1
  
 Units(1[in]);  // work in inches
 
