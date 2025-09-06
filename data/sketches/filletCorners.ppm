@@ -1,0 +1,40 @@
+// File: Sketch_2D_Fillets_AllUnique.ppm
+// Description: 2D closed rectangle with unique fillet radius at all four corners
+// Author: Tim Olson
+// Date: 2025-09-05
+
+Units(1[in]);                       // Work in inches
+
+// ---------------- Inputs & UI parameters ----------------
+Input(W, H, R_LL, R_LR, R_UR, R_UL);      // Each corner gets its own radius
+
+W    = Parameter("Width",                 4.0, LINEAR, GreaterThan(0));
+H    = Parameter("Height",                3.0, LINEAR, GreaterThan(0));
+
+// Tip: Keep each radius <= min(W, H)/2 to avoid fillet failures on very small edges
+R_LL = Parameter("Fillet Lower-Left",     0.25, LINEAR, GreaterThan(0));
+R_LR = Parameter("Fillet Lower-Right",    0.25, LINEAR, GreaterThan(0));
+R_UR = Parameter("Fillet Upper-Right",    0.25, LINEAR, GreaterThan(0));
+R_UL = Parameter("Fillet Upper-Left",     0.25, LINEAR, GreaterThan(0));
+
+// ---------------- Construct the 2D geometry ----------------
+// Rectangle corners, starting at lower-left and going CCW
+p0 = Point(0,  0);                  // lower-left  (LL)
+p1 = Point(W,  0);                  // lower-right (LR)
+p2 = Point(W,  H);                  // upper-right (UR)
+p3 = Point(0,  H);                  // upper-left  (UL)
+p4 = p0;                            // close back to start
+
+// Build closed polyline with unique fillets on all four corners
+// Fillet is inserted AFTER the vertex to be rounded.
+// For the start corner (p0), place Fillet after the closing point (p4).
+sketch = Polyline(
+  p0,                      // start
+  p1, Fillet(R_LR),        // round LR
+  p2, Fillet(R_UR),        // round UR
+  p3, Fillet(R_UL),        // round UL
+  p4, Fillet(R_LL)         // close & round LL (start corner)
+);
+
+// ---------------- Output ----------------
+Output(sketch);                     // Return the 2D sketch
