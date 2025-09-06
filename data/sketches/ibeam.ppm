@@ -1,0 +1,62 @@
+// File: IBeam_2D_Sketch.ppm
+// Description: 2D I-beam outline with inner fillets (closed polyline)
+// Author: Tim Olson
+// Date: 2025-09-05
+
+Units(1[in]);                          // Work in inches
+
+// -------- Parameters --------
+Input(F, D, Tf, Tw, R);
+
+F  = Parameter("Flange Width (F)",  6.0, LINEAR, GreaterThan(0));          // overall flange width
+D  = Parameter("Depth (D)",         8.0, LINEAR, GreaterThan(0));          // overall height
+Tf = Parameter("Flange Thick (Tf)", 0.5, LINEAR, Interval(0.01, D/2*0.9)); // flange thickness
+Tw = Parameter("Web Thick (Tw)",    0.4, LINEAR, Interval(0.01, F*0.9));   // web thickness
+
+// Fillet radius for the four inner corners (keep <= min(Tf, (F - Tw)/2))
+R  = Parameter("Inner Fillet Radius", 0.20, LINEAR, GreaterThan(0));
+
+// Half-dimensions for convenience
+hx = F/2;
+hz = D/2;
+hw = Tw/2;
+
+// -------- Build the I-outline as a single closed polyline --------
+// Order is CCW starting at top-right outside corner.
+// Fillet is inserted AFTER the vertex to round the re-entrant corner.
+
+sketch = Polyline(
+  // Top flange outer edge
+  Point( hx,  hz),
+  Point(-hx,  hz),
+  Point(-hx,  hz - Tf),
+
+  // Top-left inner corner (round)
+  Point(-hw,  hz - Tf),  Fillet(R),
+
+  // Down the left side of web
+  Point(-hw, -hz + Tf),
+
+  // Bottom-left inner corner (round)
+  Fillet(R), Point(-hx, -hz + Tf),
+
+  // Bottom flange outer edge
+  Point(-hx, -hz),
+  Point( hx, -hz),
+  Point( hx, -hz + Tf),
+
+  // Bottom-right inner corner (round)
+  Point( hw, -hz + Tf),  Fillet(R),
+
+  // Up the right side of web
+  Point( hw,  hz - Tf),
+
+  // Top-right inner corner (round)
+  Fillet(R), Point( hx,  hz - Tf),
+
+  // Close at the start
+  Point( hx,  hz)
+);
+
+// -------- Output --------
+Output(sketch);
