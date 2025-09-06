@@ -1,23 +1,37 @@
-// Description: Box with through-hole via Thickness(Circle, t)
+// Description: Box with through-hole via Thickness(Circle, t) — no Box() macro
 // Author: Tim Olson
 // Date: 2025-09-05
+// Confirmed : +1
 
-Units(1[in]);
+Units(1[in]);  // work in inches
 
+// ---- Parameters ----
 Input(X, Y, Z, HoleR);
-X = Parameter("Box X", 4, LINEAR, GreaterThan(0));
-Y = Parameter("Box Y", 3, LINEAR, GreaterThan(0));
-Z = Parameter("Box Z", 2, LINEAR, GreaterThan(0));
-HoleR = Parameter("Hole Radius", 0.5, LINEAR, GreaterThan(0));
+X     = Parameter("Box X",        4,   LINEAR, GreaterThan(0));
+Y     = Parameter("Box Y",        3,   LINEAR, GreaterThan(0));
+Z     = Parameter("Box Z",        2,   LINEAR, GreaterThan(0));
+HoleR = Parameter("Hole Radius",  0.5, LINEAR, GreaterThan(0));
 
-// Base box (corner at origin)
-box = Box(0, 0, 0, X, Y, Z);
+// ---- Build rectangular prism directly (corner at origin) ----
+// Closed rectangle profile from (0,0) to (X,Y)
+rect2D = Polyline(
+  Point(0,0),
+  Point(X,0),
+  Point(X,Y),
+  Point(0,Y),
+  Point(0,0)
+);
 
-// Make a "tube" by thickening a circle along +Z
-c2d   = Circle(HoleR);
-tube  = Thickness(c2d, Z + 2*HoleR);        // a bit longer than the box
-tube1 = Move(tube, X/2, Y/2, -HoleR);       // center in XY; extend past Z
+// Extrude by adding thickness in +Z
+block = Thickness(rect2D, Z);
 
-result = BooleanSubtract(box, tube1);
+// ---- Create long cylinder for through-hole ----
+c2d   = Circle(HoleR);                 // circle centered at (0,0)
+tube  = Thickness(c2d, Z + 2*HoleR);   // make it longer than the box height
+tube1 = Move(tube, X/2, Y/2, -HoleR);  // center in XY; extend past bottom/top
 
+// ---- Subtract to form the hole ----
+result = BooleanSubtract(block, tube1);
+
+// ---- Output ----
 Output(result);
