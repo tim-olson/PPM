@@ -1,0 +1,30 @@
+// File: Boolean_Intersect_BoxSphere.ppm
+// Description: Show how to use BooleanIntersect() with simple primitives.
+// Author: Tim Olson
+
+
+Units(1[in]);  // work in inches
+
+// ---- Function-style interface (optional for macro use) ----
+Input(X, Y, Z, R);
+
+// ---- UI parameters with defaults & constraints ----
+X = Parameter("Box X", 4, LINEAR, GreaterThan(0));          // box length (X)
+Y = Parameter("Box Y", 3, LINEAR, GreaterThan(0));          // box width  (Y)
+Z = Parameter("Box Z", 2, LINEAR, GreaterThan(0));          // box height (Z)
+
+// Choose R > min(X,Y,Z)/2 to guarantee the sphere protrudes beyond at least one face.
+// With 4×3×2, min/2 = 1.0, so 1.25 gives a clean partial clip.
+R = Parameter("Sphere Radius", 1.25, LINEAR, GreaterThan(0));
+
+// ---- Create the two source solids ----
+A = Box(0, 0, 0,  X, Y, Z);                      // axis-aligned box at origin
+
+// Center sphere inside the box; radius makes it extend beyond the box
+B = Sphere(R,  X/2, Y/2, Z/2);
+
+// ---- Boolean Intersect: keep only the overlapping volume ----
+I = BooleanIntersect(A, B);
+
+// ---- Output result ----
+Output(I);
