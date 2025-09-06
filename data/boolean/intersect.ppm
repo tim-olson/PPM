@@ -2,6 +2,7 @@
 // Description: BooleanIntersect between a rectangular prism and a sphere (no macros)
 // Author: Tim Olson
 // Date: 2025-09-05
+//Confirmed : +1
 
 Units(1[in]);  // work in inches
 
