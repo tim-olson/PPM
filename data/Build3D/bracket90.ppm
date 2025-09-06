@@ -1,0 +1,47 @@
+// File: AngleBracket_Extruded.ppm
+// Description: 3D 90° angle bracket from a 2D L-profile extruded in +Z
+// Author: Tim Olson
+// Date: 2025-09-05
+
+Units(1[in]);  // Work in inches
+
+// ---------------- Parameters ----------------
+Input(A, B, t, Len, Ri);
+
+// Leg spans along +X and +Y, leg thickness (material width), extrusion length, inside fillet
+A   = Parameter("Leg A (X extent)", 4.0, LINEAR, GreaterThan(0));
+B   = Parameter("Leg B (Y extent)", 3.0, LINEAR, GreaterThan(0));
+t   = Parameter("Leg Thickness",     0.5, LINEAR, GreaterThan(0));
+Len = Parameter("Extrusion Length",  2.0, LINEAR, GreaterThan(0));
+
+// Inside fillet at the re-entrant corner (set small; use 0 for sharp)
+Ri  = Parameter("Inside Fillet Radius", 0.10, LINEAR, GreaterThanOrEqual(0));
+
+// ---------------- 2D L-profile (closed polyline) ----------------
+// Corner layout (CCW), starting at (0,0):
+// (0,0) → (A,0) → (A,t) → (t,t) [inside corner] → (t,B) → (0,B) → (0,0)
+p0 = Point(0, 0);
+p1 = Point(A, 0);
+p2 = Point(A, t);
+p3 = Point(t, t);     // inside (re-entrant) corner: we’ll fillet here if Ri > 0
+p4 = Point(t, B);
+p5 = Point(0, B);
+p6 = p0;              // close loop
+
+// Build the outline; insert Fillet(Ri) AFTER the vertex to be rounded (p3).
+// If Ri == 0, the Fillet call still parses; it yields a sharp corner effectively.
+profile2D = Polyline(
+  p0,
+  p1,
+  p2,
+  p3, Fillet(Ri),     // round the inside corner where the legs meet
+  p4,
+  p5,
+  p6
+);
+
+// ---------------- Extrude into 3D ----------------
+bracket = Thickness(profile2D, Len);   // prism in +Z by Len
+
+// ---------------- Output ----------------
+Output(bracket);
