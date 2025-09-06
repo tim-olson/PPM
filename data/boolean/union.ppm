@@ -1,12 +1,12 @@
 // File: Boolean_Add_Boxes.ppm
-// Description: Demonstrate BooleanUnion(a, b) by adding two offset boxes into one solid.
-//Author: Tim Olson
-//Date: September 5, 2025
-//Notes: Save as Boolean_Add_Boxes.ppm. Defaults ensure overlap so the union is a single L-shaped solid. Units are inches.
+// Description: Demonstrate BooleanUnion(a, b) by adding two offset boxes into one solid (no Box() macro).
+// Author: Tim Olson
+// Date: 2025-09-05
+// Notes: Defaults ensure overlap so the union is a single L-shaped solid. Units are inches.
 
 Units(1[in]);  // inches
 
-// ---- Optional macro interface ----
+// ---- Optional function-style interface ----
 Input(X1, Y1, Z1, X2, Y2, Z2, dx, dy, dz);
 
 // ---- UI parameters (defaults & constraints) ----
@@ -23,12 +23,26 @@ dx = Parameter("Box2 Offset X", 1.0, LINEAR);
 dy = Parameter("Box2 Offset Y", 0.5, LINEAR);
 dz = Parameter("Box2 Offset Z", 0.3, LINEAR);
 
-// ---- Build source solids ----
-// Box1 from (0,0,0) to (X1,Y1,Z1)
-A = Box(0, 0, 0,  X1, Y1, Z1);
+// ---- Build Box1 directly from (0,0,0) to (X1,Y1,Z1) ----
+rect1 = Polyline(
+  Point(0,0),
+  Point(X1,0),
+  Point(X1,Y1),
+  Point(0,Y1),
+  Point(0,0)
+);
+A = Thickness(rect1, Z1);               // prism in +Z
 
-// Box2 from (dx,dy,dz) to (dx+X2, dy+Y2, dz+Z2)
-B = Box(dx, dy, dz,  dx + X2, dy + Y2, dz + Z2);
+// ---- Build Box2 directly from (dx,dy,dz) to (dx+X2,dy+Y2,dz+Z2) ----
+rect2 = Polyline(
+  Point(dx,        dy),
+  Point(dx + X2,   dy),
+  Point(dx + X2,   dy + Y2),
+  Point(dx,        dy + Y2),
+  Point(dx,        dy)
+);
+B0 = Thickness(rect2, Z2);              // prism in +Z (starting at Z=0)
+B  = Move(B0, 0, 0, dz);                // shift up so base is at Z = dz
 
 // ---- Boolean Add (Union) ----
 U = BooleanUnion(A, B);
