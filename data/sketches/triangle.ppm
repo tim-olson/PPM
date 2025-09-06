@@ -1,0 +1,33 @@
+// File: Triangle_2D.ppm
+// Description: 2D triangle (closed polyline) from width W and height H
+// Author: Tim Olson
+// Date: 2025-09-06
+
+Units(1[in]);  // Work in inches
+
+// ---------------- Inputs ----------------
+Input(W, H);
+
+// Overall width and height
+W = Parameter("Width (base length)",  4.0, LINEAR, GreaterThan(0));
+H = Parameter("Height (apex Y)",      3.0, LINEAR, GreaterThan(0));
+
+// If you want an equilateral triangle by width W, uncomment next line:
+// H = (sqrt(3)/2) * W;
+
+// ---------------- Construct points ----------------
+// Base is on the X-axis, centered about X=0; apex is at (0,H).
+p0 = Point(-W/2, 0);   // left base
+p1 = Point( W/2, 0);   // right base
+p2 = Point(  0 , H);   // apex
+
+// ---------------- Build closed polyline ----------------
+tri = Polyline(
+  p0,
+  p1,
+  p2,
+  p0   // close loop
+);
+
+// ---------------- Output ----------------
+Output(tri);
