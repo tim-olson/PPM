@@ -3,34 +3,29 @@
 // Author: Tim Olson
 // Date: 2025-09-06
 
-Units(1[in]);  // Work in inches
+Units(1[in]);  // inches
 
-// ---------------- Parameters ----------------
+// ---------- Parameters ----------
 Input(Cx, Cy, R, F, Rot);
 
-// Center
-Cx  = Parameter("Center X",     0.0, LINEAR);
-Cy  = Parameter("Center Y",     0.0, LINEAR);
+Cx  = Parameter("Center X", 0.0, LINEAR);
+Cy  = Parameter("Center Y", 0.0, LINEAR);
 
 // Outer radius
 R   = Parameter("Outer Radius", 2.0, LINEAR, GreaterThan(0));
 
-// Inner radius factor (r = F*R). Classic star ≈ 1/φ² ≈ 0.381966
-// Keep between 0.2 and 0.9 to avoid degenerate shapes.
+// Inner radius factor (r = F*R). Classic = 1/phi^2 ≈ 0.381966.
 F   = Parameter("Inner Radius Factor", 0.381966, LINEAR, Interval(0.2, 0.9));
 
-// Rotation in degrees; -90 puts a point up.
-Rot = Parameter("Rotation (deg)", -90.0, LINEAR);
+// Rotation in DEGREES. 90° points a tip up (since trig is degree-based).
+Rot = Parameter("Rotation (deg)", 90.0, LINEAR);
 
-// ---------------- Helpers ----------------
-pi   = 3.141592653589793;
-deg  = pi / 180.0;
-r    = F * R;                 // inner radius
-step = 36.0 * deg;            // 360/10 (outer+inner alternating)
-t0   = Rot * deg;             // starting angle
+// ---------- Helpers (DEGREES, not radians) ----------
+r    = F * R;       // inner radius
+step = 36.0;        // degrees between successive (outer/inner) points
+t0   = Rot;         // starting angle in degrees
 
-// ---------------- Star vertices (outer/inner alternating) ----------------
-// Start at outer tip (angle t0), then step by 36° each vertex
+// ---------- Vertices (outer/inner alternating) ----------
 P0 = Point(Cx + R * cos(t0 + 0*step),  Cy + R * sin(t0 + 0*step));
 P1 = Point(Cx + r * cos(t0 + 1*step),  Cy + r * sin(t0 + 1*step));
 P2 = Point(Cx + R * cos(t0 + 2*step),  Cy + R * sin(t0 + 2*step));
@@ -42,10 +37,8 @@ P7 = Point(Cx + r * cos(t0 + 7*step),  Cy + r * sin(t0 + 7*step));
 P8 = Point(Cx + R * cos(t0 + 8*step),  Cy + R * sin(t0 + 8*step));
 P9 = Point(Cx + r * cos(t0 + 9*step),  Cy + r * sin(t0 + 9*step));
 
-// ---------------- Build closed polyline ----------------
-star = Polyline(
-  P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P0   // close by returning to P0
-);
+// ---------- Closed polyline ----------
+star = Polyline(P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P0);
 
-// ---------------- Output ----------------
+// ---------- Output ----------
 Output(star);
