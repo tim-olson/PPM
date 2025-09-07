@@ -1,15 +1,17 @@
-// Simple 2D Polyline.ppm
-// Creates a basic open polyline through four user-defined points in the XY plane.
-
+//Description: A very simple 2D polyline in the XY plane defined by four editable points. Great as a starter template—move the points in the Parametric Parts palette to reshape the path.
+//Author: Tim Olson
+//Date: September 7, 2025
+//Notes: This produces an open polyline. To make it closed, add the first point again at the end (see comment in code).
+ 
 // (Optional) set working units
 Units(1[in]); // change to 1[mm] if preferred
 
 // -------- Parameters --------
 // Four editable points; Z=0 keeps everything in 2D.
-P0 = ParameterPoint(0,   0,   0);   // Start point
-P1 = ParameterPoint(2.0, 0.0, 0);   // Corner 1
-P2 = ParameterPoint(2.0, 1.0, 0);   // Corner 2
-P3 = ParameterPoint(3.0, 1.5, 0);   // End point
+P0 = Point(0,   0);   // Start point
+P1 = Point(2.0, 0.0);   // Corner 1
+P2 = Point(2.0, 1.0);   // Corner 2
+P3 = Point(3.0, 1.5);   // End point
 
 // Expose inputs in the palette
 Input(P0, P1, P2, P3);
