@@ -1,15 +1,15 @@
 // Description: This script generates a 2D spline using a set of control points defined by the user.
 // Author: Tim Olson
 // Date :2025-09-07
-//Notes:  This is a basic example demonstrating how to use the Spline function.
+// Notes:  This is a basic example demonstrating how to use the Spline function.
+// Confirmed : +1
+
 
 // ---------------- Setup ----------------
 Units(1[mm]);          // Keep scale predictable across drawings
 Input();               // Stand-alone part (no external parameters)
 
- 
 // ---------------- Spline ----------------
- 
 Spline2D = Spline(
   Point(0, 0),
   Point(2, 2),
@@ -17,7 +17,6 @@ Spline2D = Spline(
   Point(4, 10),
   Point(5, 0)
 );
-
 
 // ---------------- Output ----------------
 Output(Spline2D);      // Output the curve to the drawing
