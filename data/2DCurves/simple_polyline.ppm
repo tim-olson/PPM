@@ -1,0 +1,25 @@
+// Simple 2D Polyline.ppm
+// Creates a basic open polyline through four user-defined points in the XY plane.
+
+// (Optional) set working units
+Units(1[in]); // change to 1[mm] if preferred
+
+// -------- Parameters --------
+// Four editable points; Z=0 keeps everything in 2D.
+P0 = ParameterPoint(0,   0,   0);   // Start point
+P1 = ParameterPoint(2.0, 0.0, 0);   // Corner 1
+P2 = ParameterPoint(2.0, 1.0, 0);   // Corner 2
+P3 = ParameterPoint(3.0, 1.5, 0);   // End point
+
+// Expose inputs in the palette
+Input(P0, P1, P2, P3);
+
+// -------- Geometry --------
+// Open polyline through the four points
+PL = Polyline(P0, P1, P2, P3);
+
+// To make a closed shape instead, use this line:
+// PL = Polyline(P0, P1, P2, P3, P0);
+
+// -------- Output --------
+Output(PL);
