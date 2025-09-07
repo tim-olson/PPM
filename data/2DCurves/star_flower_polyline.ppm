@@ -1,4 +1,9 @@
-// Wavy Rosette 2D Polyline.ppm
+
+// Name star flower polyline 
+// Author: Tim Olson
+// Date: September 7, 2025
+// Notes: Keep Wave Amplitude smaller than Base Radius for best results.
+// Angles are in degrees.
 // Generates a closed 2D polyline whose radius varies as R + W*sin(k*theta).
 
 // ---------------- Parameters ----------------
