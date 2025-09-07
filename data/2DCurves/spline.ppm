@@ -1,0 +1,27 @@
+// Description: This script generates a 2D spline using a set of control points defined by the user.
+// Author: Tim Olson
+// Date :2023-10-01
+//Notes:  This is a basic example demonstrating how to use the Spline function.
+
+// ---------------- Inputs ----------------
+Input(numPoints, pointsX[], pointsY[]);
+
+// Number of control points for the spline
+numPoints = Parameter("Number of Points", 4, INTEGER, GreaterThan(1));
+
+// Arrays to hold the X and Y coordinates of the control points
+pointsX = Parameter("X Coordinates", [0, 2, 4, 6], ARRAY, Size(numPoints));
+pointsY = Parameter("Y Coordinates", [0, 1, 0, -1], ARRAY, Size(numPoints));
+
+// Create a list of points for the spline
+controlPoints = [];
+for (i = 0; i < numPoints; i++) {
+    controlPoints[i] = Point(pointsX[i], pointsY[i]);  // Define each control point
+}
+
+// ---------------- Create Spline ----------------
+spline = Spline(controlPoints);  // Create a spline with the control points
+
+// ---------------- Output ----------------
+Output(spline);  // Output the spline shape
+    
