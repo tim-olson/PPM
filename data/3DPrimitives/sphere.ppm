@@ -1,0 +1,26 @@
+//Description: Creates a simple 3D sphere with editable radius and center (X,Y,Z).
+//Author: Tim Olson
+//Date: September 7, 2025
+//Notes: The sphere is centered at (CX, CY, CZ).
+ 
+// ----- Units (optional) -----
+Units(1[in]);  // Change to 1[mm] if preferred
+
+// ----- Parameters -----
+R  = Parameter("Radius", 2.0, LINEAR, Interval(0.001, 1000));  // Sphere radius
+CX = Parameter("Center X", 0.0, LINEAR, Interval(-1000, 1000));
+CY = Parameter("Center Y", 0.0, LINEAR, Interval(-1000, 1000));
+CZ = Parameter("Center Z", 0.0, LINEAR, Interval(-1000, 1000));
+
+// Expose inputs in the palette
+Input(R, CX, CY, CZ);
+
+// ----- Geometry -----
+// Base sphere at the origin
+S0 = Sphere(R);                 // From TurboCAD PPM examples (e.g., sphere_w_hole.ppm)
+
+// Move to user-specified center
+S1 = Move(S0, CX, CY, CZ);
+
+// ----- Output -----
+Output(S1);
