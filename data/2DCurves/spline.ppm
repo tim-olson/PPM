@@ -1,27 +1,26 @@
 // Description: This script generates a 2D spline using a set of control points defined by the user.
 // Author: Tim Olson
-// Date :2023-10-01
+// Date :2025-09-07
 //Notes:  This is a basic example demonstrating how to use the Spline function.
 
-// ---------------- Inputs ----------------
-Input(numPoints, pointsX[], pointsY[]);
+// ---------------- Setup ----------------
+Units(1[mm]);          // Keep scale predictable across drawings
+Input();               // Stand-alone part (no external parameters)
 
-// Number of control points for the spline
-numPoints = Parameter("Number of Points", 4, INTEGER, GreaterThan(1));
+// ---------------- Control Points (8 unique) ----------------
+// Tip: Keep Z=0 for a planar 2D spline in the XY plane.
+P0 = ParameterPoint(  0,  0, 0);
+P1 = ParameterPoint( 10,  5, 0);
+P2 = ParameterPoint( 20,  3, 0);
+P3 = ParameterPoint( 30,  8, 0);
+P4 = ParameterPoint( 40, -2, 0);
+P5 = ParameterPoint( 50,  0, 0);
+P6 = ParameterPoint( 60,  7, 0);
+P7 = ParameterPoint( 70,  2, 0);
 
-// Arrays to hold the X and Y coordinates of the control points
-pointsX = Parameter("X Coordinates", [0, 2, 4, 6], ARRAY, Size(numPoints));
-pointsY = Parameter("Y Coordinates", [0, 1, 0, -1], ARRAY, Size(numPoints));
-
-// Create a list of points for the spline
-controlPoints = [];
-for (i = 0; i < numPoints; i++) {
-    controlPoints[i] = Point(pointsX[i], pointsY[i]);  // Define each control point
-}
-
-// ---------------- Create Spline ----------------
-spline = Spline(controlPoints);  // Create a spline with the control points
+// ---------------- Spline ----------------
+// Direct-call form with eight point arguments (no Array).
+Spline2D = Spline(P0, P1, P2, P3, P4, P5, P6, P7);
 
 // ---------------- Output ----------------
-Output(spline);  // Output the spline shape
-    
+Output(Spline2D);      // Output the curve to the drawing
