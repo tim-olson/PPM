@@ -1,7 +1,8 @@
-Description: Creates a torus by sweeping a circular profile along a circular path (profile rotated 90° to meet sweep requirements).
-Author: Tim Olson
-Date: 2025-09-06
-Notes: Save as .ppm and load via the Parametric Parts palette. Parameters in millimeters.
+//Description: Creates a torus by sweeping a circular profile along a circular path (profile rotated 90° to meet sweep requirements).
+//Author: Tim Olson
+//Date: 2025-09-06
+//Notes: Save as .ppm and load via the Parametric Parts palette. Parameters in millimeters.
+// Confirmed: +1
 
 // Units
 Units(1[mm]);
