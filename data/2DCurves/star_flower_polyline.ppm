@@ -1,0 +1,56 @@
+// Star-Flower 3D Polyline.ppm
+// Generates a 10-vertex (5-point) star polyline with optional Z twist.
+
+// --- Units (optional) ---
+Units(1[in]); // Change to 1[mm] if preferred
+
+// --- Parameters ---
+RO  = Parameter("Outer Radius", 2.0, LINEAR, GreaterThan(0));       // Outer radius
+RI  = Parameter("Inner Radius", 1.0, LINEAR, GreaterThan(0));       // Inner radius (should be < RO)
+ROT = Parameter("Rotation", 0, ANGULAR, Interval(-180, 180));       // Rotation (deg)
+C   = ParameterPoint(0, 0, 0);                                      // Center point (CX, CY, CZ)
+TZ  = Parameter("Twist Height", 0.5, LINEAR, Interval(0, 100));     // Total Z rise from first to last vertex
+
+// Present inputs in the palette
+Input(RO, RI, ROT, C, TZ);
+
+// --- Helpers ---
+CX = PointX(C); CY = PointY(C); CZ = PointZ(C);  // Center components
+S  = 36;                                         // Step angle = 360 / (2 * 5 spikes)
+
+// Precompute angles (degrees)
+A0 = ROT + 0*S;  A1 = ROT + 1*S;  A2 = ROT + 2*S;  A3 = ROT + 3*S;  A4 = ROT + 4*S;
+A5 = ROT + 5*S;  A6 = ROT + 6*S;  A7 = ROT + 7*S;  A8 = ROT + 8*S;  A9 = ROT + 9*S;
+
+// Linear Z offsets so the polyline gently rises; set TZ=0 to keep flat
+Z0 = CZ + TZ * (-0.5 + 0/9);
+Z1 = CZ + TZ * (-0.5 + 1/9);
+Z2 = CZ + TZ * (-0.5 + 2/9);
+Z3 = CZ + TZ * (-0.5 + 3/9);
+Z4 = CZ + TZ * (-0.5 + 4/9);
+Z5 = CZ + TZ * (-0.5 + 5/9);
+Z6 = CZ + TZ * (-0.5 + 6/9);
+Z7 = CZ + TZ * (-0.5 + 7/9);
+Z8 = CZ + TZ * (-0.5 + 8/9);
+Z9 = CZ + TZ * (-0.5 + 9/9);
+
+// --- Star points (alternate RO and RI) ---
+P0 = Point(CX + RO*cos(A0), CY + RO*sin(A0), Z0);
+P1 = Point(CX + RI*cos(A1), CY + RI*sin(A1), Z1);
+P2 = Point(CX + RO*cos(A2), CY + RO*sin(A2), Z2);
+P3 = Point(CX + RI*cos(A3), CY + RI*sin(A3), Z3);
+P4 = Point(CX + RO*cos(A4), CY + RO*sin(A4), Z4);
+P5 = Point(CX + RI*cos(A5), CY + RI*sin(A5), Z5);
+P6 = Point(CX + RO*cos(A6), CY + RO*sin(A6), Z6);
+P7 = Point(CX + RI*cos(A7), CY + RI*sin(A7), Z7);
+P8 = Point(CX + RO*cos(A8), CY + RO*sin(A8), Z8);
+P9 = Point(CX + RI*cos(A9), CY + RI*sin(A9), Z9);
+
+// --- Polyline (closed by repeating P0) ---
+PL0 = Polyline(P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P0);
+
+// Optional styling: solid brush for filled display in 2D views
+PL1 = SetProperties(PL0, "Brush" = "SOLID");
+
+// --- Output ---
+Output(PL1);
