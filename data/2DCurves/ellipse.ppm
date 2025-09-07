@@ -1,0 +1,21 @@
+// Description: Demonstrates thickening an ellipse by 10 units
+// Author: Tim Olson
+// Date: 2023-10-01
+// Notes: None
+ 
+// Units are set for consistency if required by TurboCAD
+Units(1[in]); // Work in inches
+
+// ---- Function-style interface ----
+Input(MajorRadius, MinorRadius, ThicknessValue);
+
+// ---- UI parameters with defaults & constraints ----
+MajorRadius = Parameter("MajorRadius", 3.0, LINEAR, GreaterThan(0)); // Major axis
+MinorRadius = Parameter("MinorRadius", 1.5, LINEAR, GreaterThan(0)); // Minor axis
+ 
+// Create an ellipse centered at the origin
+e2d = Ellipse(MajorRadius, MinorRadius);
+
+// ---- Return result ----
+Output(e2d);
+    
