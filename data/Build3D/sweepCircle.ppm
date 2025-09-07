@@ -1,0 +1,26 @@
+Description: Creates a torus by sweeping a circular profile along a circular path (profile rotated 90° to meet sweep requirements).
+Author: Tim Olson
+Date: 2025-09-06
+Notes: Save as .ppm and load via the Parametric Parts palette. Parameters in millimeters.
+
+// Units
+Units(1[mm]);
+Input();
+
+// Parameters
+TubeR = Parameter("Tube Radius", 10, LINEAR, Interval(0.1, 10000)); // minor radius
+TorusR = Parameter("Torus Radius", 20, LINEAR, Interval(0.1, 100000)); // major (path) radius
+
+// Build profile (circle) and rotate it so its plane is perpendicular to the path plane
+// Also offset the profile center along X by TorusR + TubeR
+Profile2D = Circle(TubeR, TorusR + TubeR, 0); // lies in XY at the correct offset
+Profile = RotateX(Profile2D, 90); // move profile into XZ plane
+
+// Build path (circle) in XY plane
+Path = Circle(TorusR, 0, 0);
+
+// Sweep to form torus
+Torus = Sweep(Profile, Path);
+
+// Output
+Output(Torus);
