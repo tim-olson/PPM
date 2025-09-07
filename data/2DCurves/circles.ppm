@@ -5,7 +5,7 @@
 // Notes: Save as a .ppm file and load via the Parametric Parts palette (TurboCAD Platinum or equivalent).
 // Parameters control radius and the common 3D center for all three circles.
 // Uses RotateX and RotateY to orient the circles per TurboCAD PPM scripting docs.
-
+// Confirmed: +1
 
 // --- Units (optional but recommended) ---
 Units(1[in]); // Work in inches; change to 1[mm] if preferred
