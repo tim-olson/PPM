@@ -2,7 +2,9 @@
 //Author: Tim Olson
 //Date: September 7, 2025
 //Notes: The sphere is centered at (CX, CY, CZ).
- 
+// Confirmed: +1
+
+
 // ----- Units (optional) -----
 Units(1[in]);  // Change to 1[mm] if preferred
 
