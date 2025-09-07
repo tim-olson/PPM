@@ -1,56 +1,77 @@
-// Star-Flower 3D Polyline.ppm
-// Generates a 10-vertex (5-point) star polyline with optional Z twist.
+// Wavy Rosette 2D Polyline.ppm
+// Generates a closed 2D polyline whose radius varies as R + W*sin(k*theta).
 
-// --- Units (optional) ---
-Units(1[in]); // Change to 1[mm] if preferred
+// ---------------- Parameters ----------------
+R   = Parameter("Base Radius", 2.0, LINEAR, GreaterThan(0));      // Base circle radius
+W   = Parameter("Wave Amplitude", 0.6, LINEAR, GreaterThan(0));   // Radial modulation
+K   = Parameter("Petal Count (k)", 5, LINEAR, Set(3,4,5,6,7,8,10,12)); // Integer multiplier
+ROT = Parameter("Rotation", 0, ANGULAR, Interval(-180, 180));     // Global rotation (deg)
+C   = ParameterPoint(0, 0, 0);                                    // Center (CX, CY)
 
-// --- Parameters ---
-RO  = Parameter("Outer Radius", 2.0, LINEAR, GreaterThan(0));       // Outer radius
-RI  = Parameter("Inner Radius", 1.0, LINEAR, GreaterThan(0));       // Inner radius (should be < RO)
-ROT = Parameter("Rotation", 0, ANGULAR, Interval(-180, 180));       // Rotation (deg)
-C   = ParameterPoint(0, 0, 0);                                      // Center point (CX, CY, CZ)
-TZ  = Parameter("Twist Height", 0.5, LINEAR, Interval(0, 100));     // Total Z rise from first to last vertex
+// Present inputs (as in TurboCAD examples)
+Input(R, W, K, ROT, C);
 
-// Present inputs in the palette
-Input(RO, RI, ROT, C, TZ);
+// ---------------- Helpers ----------------
+CX = PointX(C);  CY = PointY(C);   // Use only XY for a pure 2D shape
 
-// --- Helpers ---
-CX = PointX(C); CY = PointY(C); CZ = PointZ(C);  // Center components
-S  = 36;                                         // Step angle = 360 / (2 * 5 spikes)
+// Resolution (number of points). Fixed to keep script simple and fast.
+S = 15;                // Step angle in degrees => 360/24 = 15
+// We will make 24 vertices (0..23) and repeat the first to close.
 
-// Precompute angles (degrees)
-A0 = ROT + 0*S;  A1 = ROT + 1*S;  A2 = ROT + 2*S;  A3 = ROT + 3*S;  A4 = ROT + 4*S;
-A5 = ROT + 5*S;  A6 = ROT + 6*S;  A7 = ROT + 7*S;  A8 = ROT + 8*S;  A9 = ROT + 9*S;
+// ---------------- Angle list ----------------
+A0  = ROT + 0*S;   A1  = ROT + 1*S;   A2  = ROT + 2*S;   A3  = ROT + 3*S;
+A4  = ROT + 4*S;   A5  = ROT + 5*S;   A6  = ROT + 6*S;   A7  = ROT + 7*S;
+A8  = ROT + 8*S;   A9  = ROT + 9*S;   A10 = ROT + 10*S;  A11 = ROT + 11*S;
+A12 = ROT + 12*S;  A13 = ROT + 13*S;  A14 = ROT + 14*S;  A15 = ROT + 15*S;
+A16 = ROT + 16*S;  A17 = ROT + 17*S;  A18 = ROT + 18*S;  A19 = ROT + 19*S;
+A20 = ROT + 20*S;  A21 = ROT + 21*S;  A22 = ROT + 22*S;  A23 = ROT + 23*S;
 
-// Linear Z offsets so the polyline gently rises; set TZ=0 to keep flat
-Z0 = CZ + TZ * (-0.5 + 0/9);
-Z1 = CZ + TZ * (-0.5 + 1/9);
-Z2 = CZ + TZ * (-0.5 + 2/9);
-Z3 = CZ + TZ * (-0.5 + 3/9);
-Z4 = CZ + TZ * (-0.5 + 4/9);
-Z5 = CZ + TZ * (-0.5 + 5/9);
-Z6 = CZ + TZ * (-0.5 + 6/9);
-Z7 = CZ + TZ * (-0.5 + 7/9);
-Z8 = CZ + TZ * (-0.5 + 8/9);
-Z9 = CZ + TZ * (-0.5 + 9/9);
+// ---------------- Radii with sinusoidal modulation ----------------
+// r_i = R + W * sin(K * A_i)
+R0  = R + W*sin(K*A0);   R1  = R + W*sin(K*A1);   R2  = R + W*sin(K*A2);   R3  = R + W*sin(K*A3);
+R4  = R + W*sin(K*A4);   R5  = R + W*sin(K*A5);   R6  = R + W*sin(K*A6);   R7  = R + W*sin(K*A7);
+R8  = R + W*sin(K*A8);   R9  = R + W*sin(K*A9);   R10 = R + W*sin(K*A10);  R11 = R + W*sin(K*A11);
+R12 = R + W*sin(K*A12);  R13 = R + W*sin(K*A13);  R14 = R + W*sin(K*A14);  R15 = R + W*sin(K*A15);
+R16 = R + W*sin(K*A16);  R17 = R + W*sin(K*A17);  R18 = R + W*sin(K*A18);  R19 = R + W*sin(K*A19);
+R20 = R + W*sin(K*A20);  R21 = R + W*sin(K*A21);  R22 = R + W*sin(K*A22);  R23 = R + W*sin(K*A23);
 
-// --- Star points (alternate RO and RI) ---
-P0 = Point(CX + RO*cos(A0), CY + RO*sin(A0), Z0);
-P1 = Point(CX + RI*cos(A1), CY + RI*sin(A1), Z1);
-P2 = Point(CX + RO*cos(A2), CY + RO*sin(A2), Z2);
-P3 = Point(CX + RI*cos(A3), CY + RI*sin(A3), Z3);
-P4 = Point(CX + RO*cos(A4), CY + RO*sin(A4), Z4);
-P5 = Point(CX + RI*cos(A5), CY + RI*sin(A5), Z5);
-P6 = Point(CX + RO*cos(A6), CY + RO*sin(A6), Z6);
-P7 = Point(CX + RI*cos(A7), CY + RI*sin(A7), Z7);
-P8 = Point(CX + RO*cos(A8), CY + RO*sin(A8), Z8);
-P9 = Point(CX + RI*cos(A9), CY + RI*sin(A9), Z9);
+// ---------------- Points (2D) ----------------
+P0  = Point(CX + R0 *cos(A0),  CY + R0 *sin(A0));
+P1  = Point(CX + R1 *cos(A1),  CY + R1 *sin(A1));
+P2  = Point(CX + R2 *cos(A2),  CY + R2 *sin(A2));
+P3  = Point(CX + R3 *cos(A3),  CY + R3 *sin(A3));
+P4  = Point(CX + R4 *cos(A4),  CY + R4 *sin(A4));
+P5  = Point(CX + R5 *cos(A5),  CY + R5 *sin(A5));
+P6  = Point(CX + R6 *cos(A6),  CY + R6 *sin(A6));
+P7  = Point(CX + R7 *cos(A7),  CY + R7 *sin(A7));
+P8  = Point(CX + R8 *cos(A8),  CY + R8 *sin(A8));
+P9  = Point(CX + R9 *cos(A9),  CY + R9 *sin(A9));
+P10 = Point(CX + R10*cos(A10), CY + R10*sin(A10));
+P11 = Point(CX + R11*cos(A11), CY + R11*sin(A11));
+P12 = Point(CX + R12*cos(A12), CY + R12*sin(A12));
+P13 = Point(CX + R13*cos(A13), CY + R13*sin(A13));
+P14 = Point(CX + R14*cos(A14), CY + R14*sin(A14));
+P15 = Point(CX + R15*cos(A15), CY + R15*sin(A15));
+P16 = Point(CX + R16*cos(A16), CY + R16*sin(A16));
+P17 = Point(CX + R17*cos(A17), CY + R17*sin(A17));
+P18 = Point(CX + R18*cos(A18), CY + R18*sin(A18));
+P19 = Point(CX + R19*cos(A19), CY + R19*sin(A19));
+P20 = Point(CX + R20*cos(A20), CY + R20*sin(A20));
+P21 = Point(CX + R21*cos(A21), CY + R21*sin(A21));
+P22 = Point(CX + R22*cos(A22), CY + R22*sin(A22));
+P23 = Point(CX + R23*cos(A23), CY + R23*sin(A23));
 
-// --- Polyline (closed by repeating P0) ---
-PL0 = Polyline(P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P0);
+// ---------------- Polyline (closed) ----------------
+PL0 = Polyline(
+  P0,  P1,  P2,  P3,  P4,  P5,  P6,  P7,
+  P8,  P9,  P10, P11, P12, P13, P14, P15,
+  P16, P17, P18, P19, P20, P21, P22, P23,
+  P0 // close the loop
+);
 
-// Optional styling: solid brush for filled display in 2D views
-PL1 = SetProperties(PL0, "Brush" = "SOLID");
+// Optional fill so it looks nice in 2D display modes
+PL1 = SetProperties(PL0, "BrushStyle" = "SOLID");
 
-// --- Output ---
+// ---------------- Output ----------------
 Output(PL1);
+
