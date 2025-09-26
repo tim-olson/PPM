@@ -11,7 +11,7 @@ Units(1[in]); // Work in inches
 
 // --- Parameters ---
 R  = Parameter("Radius",         0.50, LINEAR, GreaterThan(0));       // Spring radius
-P  = Parameter("Pitch per turn", 0.50, LINEAR, GreaterThan(0));       // Axial rise per 360�
+P  = Parameter("Pitch per turn", 0.50, LINEAR, GreaterThan(0));       // Axial rise per 360
 CX = Parameter("Center X",       0.00, LINEAR, Interval(-100, 100));  // Base center X
 CY = Parameter("Center Y",       0.00, LINEAR, Interval(-100, 100));  // Base center Y
 CZ = Parameter("Center Z",       0.00, LINEAR, Interval(-100, 100));  // Base center Z
@@ -25,12 +25,12 @@ SamplesPerTurn = 16;
 dA = 360 / SamplesPerTurn; // degrees per sample
 k  = P / 360;              // axial rise per degree
 
-// --- Angles for two full turns (0..720� inclusive) ---
+// --- Angles for two full turns (0..720 inclusive) ---
 A0  = 0*dA;   A1  = 1*dA;   A2  = 2*dA;   A3  = 3*dA;   A4  = 4*dA;   A5  = 5*dA;   A6  = 6*dA;   A7  = 7*dA;
 A8  = 8*dA;   A9  = 9*dA;   A10 = 10*dA;  A11 = 11*dA;  A12 = 12*dA;  A13 = 13*dA;  A14 = 14*dA;  A15 = 15*dA;
 A16 = 16*dA;  A17 = 17*dA;  A18 = 18*dA;  A19 = 19*dA;  A20 = 20*dA;  A21 = 21*dA;  A22 = 22*dA;  A23 = 23*dA;
 A24 = 24*dA;  A25 = 25*dA;  A26 = 26*dA;  A27 = 27*dA;  A28 = 28*dA;  A29 = 29*dA;  A30 = 30*dA;  A31 = 31*dA;
-A32 = 32*dA; // 32*dA = 720� (end of second turn)
+A32 = 32*dA; // 32*dA = 720 (end of second turn)
 
 // --- Points on the helix (x = CX + R*cos(a), y = CY + R*sin(a), z = CZ + k*a) ---
 // Trig uses degrees; z advances linearly with angle via k = P/360.
