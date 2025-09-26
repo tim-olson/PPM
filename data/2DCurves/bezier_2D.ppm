@@ -1,0 +1,56 @@
+// Name: Bezier_2D.ppm
+// Description: Creates a 2D cubic Bezier spline in the XY plane from four editable control points (P0..P3) and sets the spline type to Bezier.
+// Author: Tim Olson
+// Date: September 23, 2025
+// Notes: Save as a .ppm file and load via the Parametric Parts palette  
+// Parameters expose the XY coordinates of four control points. The curve lies in the XY plane (Z=0).
+// Uses SetProperties("$SPLINETYPE" = 1) so the spline is evaluated as a Bezier.
+// Confirmed: +1
+
+// --- Units ---
+Units(1[in]); // inches
+
+// --- Parameters ---
+// Control point P0 (start)
+P0X = Parameter("P0 X", 0.0, LINEAR, Interval(-100, 100));
+P0Y = Parameter("P0 Y", 0.0, LINEAR, Interval(-100, 100));
+
+// Control point P1 (first handle)
+P1X = Parameter("P1 X", 1.0, LINEAR, Interval(-100, 100));
+P1Y = Parameter("P1 Y", 0.5, LINEAR, Interval(-100, 100));
+
+// Control point P2 (second handle)
+P2X = Parameter("P2 X", 3.0, LINEAR, Interval(-100, 100));
+P2Y = Parameter("P2 Y", 1.5, LINEAR, Interval(-100, 100));
+
+// Control point P3 (end)
+P3X = Parameter("P3 X", 4.0, LINEAR, Interval(-100, 100));
+P3Y = Parameter("P3 Y", 0.0, LINEAR, Interval(-100, 100));
+
+// --- Input ---
+Input(P0X, P0Y, P1X, P1Y, P2X, P2Y, P3X, P3Y);
+
+// --- Build geometry ---
+// Construct 2D control points in the XY plane
+Q0 = Point(P0X, P0Y);
+Q1 = Point(P1X, P1Y);
+Q2 = Point(P2X, P2Y);
+Q3 = Point(P3X, P3Y);
+
+// Create a 2D spline through the four control points
+SPL = Spline(Q0, Q1, Q2, Q3);
+
+// --- Properties ---
+// Evaluate the spline as Bezier and set simple display attributes
+Bezier2D = SetProperties(
+  SPL,
+  "$SPLINETYPE" = 1, // Bezier
+  "PenColor"    = 255,
+  "PenWidth"    = 0.03
+);
+
+// --- Output ---
+Output(Bezier2D);
+
+
+

@@ -1,0 +1,82 @@
+// Name: Spring.ppm
+// Description: Builds a 3D two-turn helical spring path as a spline by sampling points along a helix; radius, pitch, and center are editable.
+// Author: Tim Olson
+// Date: September 23, 2025
+// Notes: Save as a .ppm file and load via the Parametric Parts palette (TurboCAD Platinum or equivalent).
+// This creates only the spring PATH (a curve). Use downstream tools (e.g., Sweep) to create a solid if needed.
+// Confirmed: +1
+
+// --- Units ---
+Units(1[in]); // Work in inches
+
+// --- Parameters ---
+R  = Parameter("Radius",         0.50, LINEAR, GreaterThan(0));       // Spring radius
+P  = Parameter("Pitch per turn", 0.50, LINEAR, GreaterThan(0));       // Axial rise per 360�
+CX = Parameter("Center X",       0.00, LINEAR, Interval(-100, 100));  // Base center X
+CY = Parameter("Center Y",       0.00, LINEAR, Interval(-100, 100));  // Base center Y
+CZ = Parameter("Center Z",       0.00, LINEAR, Interval(-100, 100));  // Base center Z
+
+// --- Input (for reuse/macro wrapping) ---
+Input(R, P, CX, CY, CZ);
+
+// --- Derived (sampling setup) ---
+// Two turns sampled uniformly; 16 samples per turn -> smooth but lightweight
+SamplesPerTurn = 16;
+dA = 360 / SamplesPerTurn; // degrees per sample
+k  = P / 360;              // axial rise per degree
+
+// --- Angles for two full turns (0..720� inclusive) ---
+A0  = 0*dA;   A1  = 1*dA;   A2  = 2*dA;   A3  = 3*dA;   A4  = 4*dA;   A5  = 5*dA;   A6  = 6*dA;   A7  = 7*dA;
+A8  = 8*dA;   A9  = 9*dA;   A10 = 10*dA;  A11 = 11*dA;  A12 = 12*dA;  A13 = 13*dA;  A14 = 14*dA;  A15 = 15*dA;
+A16 = 16*dA;  A17 = 17*dA;  A18 = 18*dA;  A19 = 19*dA;  A20 = 20*dA;  A21 = 21*dA;  A22 = 22*dA;  A23 = 23*dA;
+A24 = 24*dA;  A25 = 25*dA;  A26 = 26*dA;  A27 = 27*dA;  A28 = 28*dA;  A29 = 29*dA;  A30 = 30*dA;  A31 = 31*dA;
+A32 = 32*dA; // 32*dA = 720� (end of second turn)
+
+// --- Points on the helix (x = CX + R*cos(a), y = CY + R*sin(a), z = CZ + k*a) ---
+// Trig uses degrees; z advances linearly with angle via k = P/360.
+P0  = Point(CX + R*cos(A0),  CY + R*sin(A0),  CZ + k*A0);
+P1  = Point(CX + R*cos(A1),  CY + R*sin(A1),  CZ + k*A1);
+P2  = Point(CX + R*cos(A2),  CY + R*sin(A2),  CZ + k*A2);
+P3  = Point(CX + R*cos(A3),  CY + R*sin(A3),  CZ + k*A3);
+P4  = Point(CX + R*cos(A4),  CY + R*sin(A4),  CZ + k*A4);
+P5  = Point(CX + R*cos(A5),  CY + R*sin(A5),  CZ + k*A5);
+P6  = Point(CX + R*cos(A6),  CY + R*sin(A6),  CZ + k*A6);
+P7  = Point(CX + R*cos(A7),  CY + R*sin(A7),  CZ + k*A7);
+P8  = Point(CX + R*cos(A8),  CY + R*sin(A8),  CZ + k*A8);
+P9  = Point(CX + R*cos(A9),  CY + R*sin(A9),  CZ + k*A9);
+P10 = Point(CX + R*cos(A10), CY + R*sin(A10), CZ + k*A10);
+P11 = Point(CX + R*cos(A11), CY + R*sin(A11), CZ + k*A11);
+P12 = Point(CX + R*cos(A12), CY + R*sin(A12), CZ + k*A12);
+P13 = Point(CX + R*cos(A13), CY + R*sin(A13), CZ + k*A13);
+P14 = Point(CX + R*cos(A14), CY + R*sin(A14), CZ + k*A14);
+P15 = Point(CX + R*cos(A15), CY + R*sin(A15), CZ + k*A15);
+P16 = Point(CX + R*cos(A16), CY + R*sin(A16), CZ + k*A16);
+P17 = Point(CX + R*cos(A17), CY + R*sin(A17), CZ + k*A17);
+P18 = Point(CX + R*cos(A18), CY + R*sin(A18), CZ + k*A18);
+P19 = Point(CX + R*cos(A19), CY + R*sin(A19), CZ + k*A19);
+P20 = Point(CX + R*cos(A20), CY + R*sin(A20), CZ + k*A20);
+P21 = Point(CX + R*cos(A21), CY + R*sin(A21), CZ + k*A21);
+P22 = Point(CX + R*cos(A22), CY + R*sin(A22), CZ + k*A22);
+P23 = Point(CX + R*cos(A23), CY + R*sin(A23), CZ + k*A23);
+P24 = Point(CX + R*cos(A24), CY + R*sin(A24), CZ + k*A24);
+P25 = Point(CX + R*cos(A25), CY + R*sin(A25), CZ + k*A25);
+P26 = Point(CX + R*cos(A26), CY + R*sin(A26), CZ + k*A26);
+P27 = Point(CX + R*cos(A27), CY + R*sin(A27), CZ + k*A27);
+P28 = Point(CX + R*cos(A28), CY + R*sin(A28), CZ + k*A28);
+P29 = Point(CX + R*cos(A29), CY + R*sin(A29), CZ + k*A29);
+P30 = Point(CX + R*cos(A30), CY + R*sin(A30), CZ + k*A30);
+P31 = Point(CX + R*cos(A31), CY + R*sin(A31), CZ + k*A31);
+P32 = Point(CX + R*cos(A32), CY + R*sin(A32), CZ + k*A32);
+
+// --- Build the spring path as a spline through all helix samples ---
+SpringPath = Spline(
+  P0,  P1,  P2,  P3,  P4,  P5,  P6,  P7,
+  P8,  P9,  P10, P11, P12, P13, P14, P15,
+  P16, P17, P18, P19, P20, P21, P22, P23,
+  P24, P25, P26, P27, P28, P29, P30, P31, P32
+);
+
+ 
+// --- Output ---
+Output(SpringPath);
+

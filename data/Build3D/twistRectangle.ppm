@@ -1,0 +1,83 @@
+// Name: TwistSRectangle.ppm
+// Description: Sweeps a 2D rectangle along a circular path and applies a user-controlled twist (0�4 full turns).
+// Author: Tim Olson
+// Author: Tim Olson
+// Date: September 23, 2025
+// Notes: Save as a .ppm file and load via the Parametric Parts palette (TurboCAD Platinum or equivalent).
+//        The rectangle profile is built in the XY plane, centered, then rotated about X by 90� to face the sweep path in the XY plane.
+//        Twist is applied via SetProperties("$TWISTANGLE") in radians: angle = 2*PI*Turns.
+// Confirmed: +1
+
+// --- Units ---
+Units(1[mm]); // millimeters
+
+// --- Parameters ---
+W = Parameter("Rect Width",   40,  LINEAR, GreaterThan(0));
+H = Parameter("Rect Height",  10,  LINEAR, GreaterThan(0));
+R = Parameter("Path Radius",  200, LINEAR, GreaterThan(0));
+T = Parameter("Twist Turns",  "1", Set("0","1","2","3","4")); // 0..4 full turns
+
+// --- Input ---
+Input(W, H, R, T);
+
+// --- Resolve turns (string enum -> number) ---
+Turns = IF(T=="0",0, IF(T=="1",1, IF(T=="2",2, IF(T=="3",3, 4))));
+
+// --- Build profile (2D rectangle in XY, centered at origin) ---
+Rect2D   = Rectangle(W, H);                 // lower-left at (0,0)
+RectCent = Move(Rect2D, -W/2, -H/2);        // center at (0,0)
+Profile  = RotateX(RectCent, 90);           // face the sweep path lying in XY
+
+// --- Build sweep path (circle in XY passing through the origin) ---
+Path = Move(Circle(R, 0, 0), -R, 0, 0);     // center at (-R,0), rightmost point at (0,0)
+
+// --- Sweep and apply twist ---
+SweepBody = Sweep(Profile, Path);
+Twisted   = SetProperties(SweepBody, ("$TWISTANGLE") = 2*PI*Turns);
+
+// --- Visual properties (optional helpers) ---
+Profile_v = SetProperties(Profile, "PenColor" = 0x00AA00, "PenWidth" = 0.03);
+Path_v    = SetProperties(Path,    "PenColor" = 0x0000FF, "PenWidth" = 0.03);
+
+// --- Output ---
+Output(Profile_v, Path_v, Twisted);mber 23, 2025
+// Notes: Save as a .ppm file and load via the Parametric Parts palette (TurboCAD Platinum or equivalent).
+//        The rectangle profile is built in the XY plane, centered, then rotated about X by 90� to face the sweep path in the XY plane.
+//        Twist is applied via SetProperties("$TWISTANGLE") in radians: angle = 2*PI*Turns.
+// Confirmed: +1
+
+// --- Units ---
+Units(1[mm]); // millimeters
+
+// --- Parameters ---
+W = Parameter("Rect Width",   40,  LINEAR, GreaterThan(0));
+H = Parameter("Rect Height",  10,  LINEAR, GreaterThan(0));
+R = Parameter("Path Radius",  200, LINEAR, GreaterThan(0));
+T = Parameter("Twist Turns",  "1", Set("0","1","2","3","4")); // 0..4 full turns
+
+// --- Input ---
+Input(W, H, R, T);
+
+// --- Resolve turns (string enum -> number) ---
+Turns = IF(T=="0",0, IF(T=="1",1, IF(T=="2",2, IF(T=="3",3, 4))));
+
+// --- Build profile (2D rectangle in XY, centered at origin) ---
+Rect2D   = Rectangle(W, H);                 // lower-left at (0,0)
+RectCent = Move(Rect2D, -W/2, -H/2);        // center at (0,0)
+Profile  = RotateX(RectCent, 90);           // face the sweep path lying in XY
+
+// --- Build sweep path (circle in XY passing through the origin) ---
+Path = Move(Circle(R, 0, 0), -R, 0, 0);     // center at (-R,0), rightmost point at (0,0)
+
+// --- Sweep and apply twist ---
+SweepBody = Sweep(Profile, Path);
+Twisted   = SetProperties(SweepBody, ("$TWISTANGLE") = 2*PI*Turns);
+
+// --- Visual properties (optional helpers) ---
+Profile_v = SetProperties(Profile, "PenColor" = 0x00AA00, "PenWidth" = 0.03);
+Path_v    = SetProperties(Path,    "PenColor" = 0x0000FF, "PenWidth" = 0.03);
+
+// --- Output ---
+Output(Profile_v, Path_v, Twisted);
+
+

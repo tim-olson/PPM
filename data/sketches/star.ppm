@@ -21,7 +21,7 @@ F   = Parameter("Inner Radius Factor", 0.381966, LINEAR, Interval(0.2, 0.9));
 // Rotation in DEGREES. 90° points a tip up (since trig is degree-based).
 Rot = Parameter("Rotation (deg)", 90.0, LINEAR);
 
-// ---------- Helpers (DEGREES, not radians) ----------
+// ---------- Helpers (DEGREES, not radians) ----------  
 r    = F * R;       // inner radius
 step = 36.0;        // degrees between successive (outer/inner) points
 t0   = Rot;         // starting angle in degrees

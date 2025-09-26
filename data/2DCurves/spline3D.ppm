@@ -1,0 +1,57 @@
+// Name: Spline3D.ppm
+// Description: Creates a 3D spline through four editable points, with visible spline frame, custom pen color, and pen width.
+// Author: Tim Olson
+// Date: September 23, 2025
+// Notes: Save as a .ppm file and load via the Parametric Parts palette 
+// Parameters define the XYZ coordinates for each of four control points.
+// Uses SetProperties to enable the spline frame ("$SPLFRAME" = 1) and set display attributes.
+// Confirmed: +1
+
+// --- Units ---
+Units(1[in]); // Work in inches
+
+// --- Parameters ---
+// Point 1
+X1 = Parameter("X1", 0,    LINEAR, Interval(-100, 100));
+Y1 = Parameter("Y1", 0,    LINEAR, Interval(-100, 100));
+Z1 = Parameter("Z1", 0,    LINEAR, Interval(-100, 100));
+
+// Point 2
+X2 = Parameter("X2", 2.0,  LINEAR, Interval(-100, 100));
+Y2 = Parameter("Y2", 4.0,  LINEAR, Interval(-100, 100));
+Z2 = Parameter("Z2", 1.5,  LINEAR, Interval(-100, 100));
+
+// Point 3
+X3 = Parameter("X3", 5.0,  LINEAR, Interval(-100, 100));
+Y3 = Parameter("Y3", 1.5,  LINEAR, Interval(-100, 100));
+Z3 = Parameter("Z3", 3.0,  LINEAR, Interval(-100, 100));
+
+// Point 4
+X4 = Parameter("X4", 2.5,  LINEAR, Interval(-100, 100));
+Y4 = Parameter("Y4", 0.5,  LINEAR, Interval(-100, 100));
+Z4 = Parameter("Z4", 2.25, LINEAR, Interval(-100, 100));
+
+// --- Input (for reuse in macros/custom calls) ---
+Input(X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4);
+
+// --- Build geometry ---
+// Create points from parameter values
+P1 = Point(X1, Y1, Z1);
+P2 = Point(X2, Y2, Z2);
+P3 = Point(X3, Y3, Z3);
+P4 = Point(X4, Y4, Z4);
+
+// Spline through the four points
+S = Spline(P1, P2, P3, P4);
+
+// --- Visual properties ---
+// Display the spline frame, set pen color, and pen width
+S_vis = SetProperties(
+          S,
+          "$SPLFRAME" = 1, // show spline control frame
+          "PenColor"  = 255,  // color index/value as supported by TurboCAD
+          "PenWidth"  = 0.03  // line width in inches
+        );
+
+// --- Output ---
+Output(S_vis);

@@ -1,0 +1,43 @@
+// Name: Hexagon.ppm
+// Description: Creates a regular 2D hexagon in the XY plane by computing six vertices from center (CX,CY), radius R, and start angle A0 using cos/sin.
+// Author: Tim Olson
+// Date: September 23, 2025
+// Notes: Angles are in degrees. A0 rotates the hexagon. The hexagon is closed by repeating the first vertex.
+// Confirmed: +1
+
+// --- Units ---
+Units(1[in]); // inches
+
+// --- Parameters ---
+R  = Parameter("Radius",            2.0, LINEAR, GreaterThan(0));      // circumscribed radius
+CX = Parameter("Center X",          0.0, LINEAR, Interval(-100, 100)); // center X
+CY = Parameter("Center Y",          0.0, LINEAR, Interval(-100, 100)); // center Y
+A0 = Parameter("Start Angle",       0.0, ANGULAR,Interval(0,360));                       // initial rotation
+
+// --- Input ---
+Input(R, CX, CY, A0);
+
+// --- Vertex angles (degrees) ---
+A1 = A0 +   0;
+A2 = A0 +  60;
+A3 = A0 + 120;
+A4 = A0 + 180;
+A5 = A0 + 240;
+A6 = A0 + 300;
+
+// --- Compute vertices directly via polar-to-Cartesian ---
+V1 = Point(CX + R*cos(A1), CY + R*sin(A1));
+V2 = Point(CX + R*cos(A2), CY + R*sin(A2));
+V3 = Point(CX + R*cos(A3), CY + R*sin(A3));
+V4 = Point(CX + R*cos(A4), CY + R*sin(A4));
+V5 = Point(CX + R*cos(A5), CY + R*sin(A5));
+V6 = Point(CX + R*cos(A6), CY + R*sin(A6));
+
+// --- Closed hexagon polyline ---
+Hex = Polyline(V1, V2, V3, V4, V5, V6, V1);
+
+// --- Display properties ---
+Hex_v = SetProperties(Hex, "PenWidth" = 0.03, "PenColor" = 0x0000FF);
+
+// --- Output ---
+Output(Hex_v);

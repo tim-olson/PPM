@@ -1,0 +1,89 @@
+// Name: Spiral.ppm
+// Description: Generates a 2D Archimedean spiral in the XY plane by sampling points and fitting a spline.
+// Author: Tim Olson
+// Date: September 23, 2025
+// Notes: Save as a .ppm file and load via the Parametric Parts palette.
+//        The spiral uses r(?) = R0 + k�? with ? in degrees and k = GrowthPerTurn/360.
+//        This simple example draws two full turns (0�..720�) at 16 samples per turn.
+// Confirmed: +1
+
+// --- Units ---
+Units(1[in]); // inches
+
+// --- Parameters ---
+R0 = Parameter("Start Radius",      0.50, LINEAR, GreaterThan(0));      // r at ? = 0�
+GT = Parameter("Growth per Turn",   0.50, LINEAR, GreaterThan(0));      // ?r per 360�
+CX = Parameter("Center X",          0.00, LINEAR, Interval(-100, 100)); // spiral center X
+CY = Parameter("Center Y",          0.00, LINEAR, Interval(-100, 100)); // spiral center Y
+
+// --- Input ---
+Input(R0, GT, CX, CY);
+
+// --- Sampling setup ---
+// Two turns, 16 samples per turn -> 33 points including both ends.
+// k is radial growth per degree.
+SamplesPerTurn = 16;
+dA = 360 / SamplesPerTurn;
+k  = GT / 360;
+
+// --- Angles (degrees) for 0..720� ---
+A0  = 0*dA;   A1  = 1*dA;   A2  = 2*dA;   A3  = 3*dA;   A4  = 4*dA;   A5  = 5*dA;   A6  = 6*dA;   A7  = 7*dA;
+A8  = 8*dA;   A9  = 9*dA;   A10 = 10*dA;  A11 = 11*dA;  A12 = 12*dA;  A13 = 13*dA;  A14 = 14*dA;  A15 = 15*dA;
+A16 = 16*dA;  A17 = 17*dA;  A18 = 18*dA;  A19 = 19*dA;  A20 = 20*dA;  A21 = 21*dA;  A22 = 22*dA;  A23 = 23*dA;
+A24 = 24*dA;  A25 = 25*dA;  A26 = 26*dA;  A27 = 27*dA;  A28 = 28*dA;  A29 = 29*dA;  A30 = 30*dA;  A31 = 31*dA;
+A32 = 32*dA; // = 720�
+
+// --- Sample points on the spiral (XY) ---
+// x(?) = CX + (R0 + k�?)�cos?,  y(?) = CY + (R0 + k�?)�sin?
+P0  = Point(CX + (R0 + k*A0 )*cos(A0 ), CY + (R0 + k*A0 )*sin(A0 ));
+P1  = Point(CX + (R0 + k*A1 )*cos(A1 ), CY + (R0 + k*A1 )*sin(A1 ));
+P2  = Point(CX + (R0 + k*A2 )*cos(A2 ), CY + (R0 + k*A2 )*sin(A2 ));
+P3  = Point(CX + (R0 + k*A3 )*cos(A3 ), CY + (R0 + k*A3 )*sin(A3 ));
+P4  = Point(CX + (R0 + k*A4 )*cos(A4 ), CY + (R0 + k*A4 )*sin(A4 ));
+P5  = Point(CX + (R0 + k*A5 )*cos(A5 ), CY + (R0 + k*A5 )*sin(A5 ));
+P6  = Point(CX + (R0 + k*A6 )*cos(A6 ), CY + (R0 + k*A6 )*sin(A6 ));
+P7  = Point(CX + (R0 + k*A7 )*cos(A7 ), CY + (R0 + k*A7 )*sin(A7 ));
+P8  = Point(CX + (R0 + k*A8 )*cos(A8 ), CY + (R0 + k*A8 )*sin(A8 ));
+P9  = Point(CX + (R0 + k*A9 )*cos(A9 ), CY + (R0 + k*A9 )*sin(A9 ));
+P10 = Point(CX + (R0 + k*A10)*cos(A10), CY + (R0 + k*A10)*sin(A10));
+P11 = Point(CX + (R0 + k*A11)*cos(A11), CY + (R0 + k*A11)*sin(A11));
+P12 = Point(CX + (R0 + k*A12)*cos(A12), CY + (R0 + k*A12)*sin(A12));
+P13 = Point(CX + (R0 + k*A13)*cos(A13), CY + (R0 + k*A13)*sin(A13));
+P14 = Point(CX + (R0 + k*A14)*cos(A14), CY + (R0 + k*A14)*sin(A14));
+P15 = Point(CX + (R0 + k*A15)*cos(A15), CY + (R0 + k*A15)*sin(A15));
+P16 = Point(CX + (R0 + k*A16)*cos(A16), CY + (R0 + k*A16)*sin(A16));
+P17 = Point(CX + (R0 + k*A17)*cos(A17), CY + (R0 + k*A17)*sin(A17));
+P18 = Point(CX + (R0 + k*A18)*cos(A18), CY + (R0 + k*A18)*sin(A18));
+P19 = Point(CX + (R0 + k*A19)*cos(A19), CY + (R0 + k*A19)*sin(A19));
+P20 = Point(CX + (R0 + k*A20)*cos(A20), CY + (R0 + k*A20)*sin(A20));
+P21 = Point(CX + (R0 + k*A21)*cos(A21), CY + (R0 + k*A21)*sin(A21));
+P22 = Point(CX + (R0 + k*A22)*cos(A22), CY + (R0 + k*A22)*sin(A22));
+P23 = Point(CX + (R0 + k*A23)*cos(A23), CY + (R0 + k*A23)*sin(A23));
+P24 = Point(CX + (R0 + k*A24)*cos(A24), CY + (R0 + k*A24)*sin(A24));
+P25 = Point(CX + (R0 + k*A25)*cos(A25), CY + (R0 + k*A25)*sin(A25));
+P26 = Point(CX + (R0 + k*A26)*cos(A26), CY + (R0 + k*A26)*sin(A26));
+P27 = Point(CX + (R0 + k*A27)*cos(A27), CY + (R0 + k*A27)*sin(A27));
+P28 = Point(CX + (R0 + k*A28)*cos(A28), CY + (R0 + k*A28)*sin(A28));
+P29 = Point(CX + (R0 + k*A29)*cos(A29), CY + (R0 + k*A29)*sin(A29));
+P30 = Point(CX + (R0 + k*A30)*cos(A30), CY + (R0 + k*A30)*sin(A30));
+P31 = Point(CX + (R0 + k*A31)*cos(A31), CY + (R0 + k*A31)*sin(A31));
+P32 = Point(CX + (R0 + k*A32)*cos(A32), CY + (R0 + k*A32)*sin(A32));
+
+// --- Build spiral curve as a spline through the samples ---
+Spiral = Spline(
+  P0,  P1,  P2,  P3,  P4,  P5,  P6,  P7,
+  P8,  P9,  P10, P11, P12, P13, P14, P15,
+  P16, P17, P18, P19, P20, P21, P22, P23,
+  P24, P25, P26, P27, P28, P29, P30, P31, P32
+);
+
+// --- Display properties ---
+Spiral_v = SetProperties(
+  Spiral,
+  "PenColor"  = 0x0000FF,
+  "PenWidth"  = 0.03,
+  "$SPLFRAME" = 0
+);
+
+// --- Output ---
+Output(Spiral_v);
