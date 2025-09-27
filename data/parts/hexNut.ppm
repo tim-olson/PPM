@@ -1,0 +1,60 @@
+
+// File: HexNut.ppm
+// Description: Select a standard ISO-style metric hex nut size (M4–M20). 
+// Author: Tim Olson  
+// Date: 2025-09-26
+// Notes:
+//   • Requires a companion custom function Macro\NutBase.ppm in the *Macro* subfolder
+//     next to this file. Example layout:
+//         <YourFolder>\HexNut.ppm
+//         <YourFolder>\Macro\NutBase.ppm
+//     Per PPM conventions, custom functions are discovered in a sibling "Macro" folder.
+//   • Dimensions are typical values for standard metric hex nuts; adjust if your shop
+//     standard differs (e.g., ISO 4032 vs. ISO 4033 heights).
+//   • This script defines one editable parameter (nut size) and delegates the solid
+//     construction to NutBase(width_across_flats, thickness, pitch, thread_dia, cone_dia).
+//   • Output() inserts the resulting solid into the drawing; no Input() is needed here
+//     because this is a top-level symbol (Input() is used by custom functions).
+// Confirmed : +1
+
+// ----------------------------- Editable Parameter -----------------------------
+// Drop-down selector for ISO metric nut size. The string value (e.g., "M6") drives
+// the IF-chain below to pick the proper dimensions for NutBase().
+Type = Parameter("Nut Type", "M6", Set("M4","M5","M6","M8","M10","M12","M14","M16","M20"));
+
+// ------------------------------- Drawing Units --------------------------------
+// Force millimetre units regardless of the host drawing's unit settings. This
+// avoids accidental scaling when inserting into imperial drawings.
+Units(1[mm]);   // all linear values are in millimetres
+
+// -------------------------- Dimension → Solid Mapping -------------------------
+// For each size option we pass a tuple of dimensions to NutBase():
+//   NutBase( across_flats, thickness, pitch, thread_dia, cone_dia )
+//
+// • across_flats : Hex width across the flats (nominal spanner size).
+// • thickness    : Nut height (typical/standard height, not “thin”/jam nut).
+// • pitch        : Metric thread pitch associated with the size (coarse series).
+// • thread_dia   : Nominal major diameter (M-size).
+// • cone_dia     : Diameter at the top chamfer/cone used to break the hex edges.
+//                  For M4 we use 6.999 instead of 7.0 to avoid degeneracy where
+//                  the cone equals the across-flats dimension (robustness tweak).
+//
+// The IF-chain is written from largest to smallest so the first TRUE “wins” and
+// flows through the resN variables to the final 'res' value.
+
+//                A/F     thick   pitch  threadØ coneØ
+res9 = IF(Type=="M20", NutBase( 30,     16.0,   2.5,   20,     30 ), 0);
+res8 = IF(Type=="M16", NutBase( 24,     13.0,   2.0,   16,     24 ), res9);
+res7 = IF(Type=="M14", NutBase( 22,     11.0,   2.0,   14,     22 ), res8);
+res6 = IF(Type=="M12", NutBase( 19,     10.0,   1.75,  12,     19 ), res7);
+res5 = IF(Type=="M10", NutBase( 17,      8.0,   1.50,  10,     17 ), res6);
+res4 = IF(Type=="M8",  NutBase( 13,      6.5,   1.25,   8,     13 ), res5);
+res3 = IF(Type=="M6",  NutBase( 10,      5.0,   1.00,   6,     10 ), res4);
+res2 = IF(Type=="M5",  NutBase(  8,      4.0,   0.80,   5,      8 ), res3);
+res  = IF(Type=="M4",  NutBase(  7,      3.2,   0.70,   4,   6.999 ), res2);
+
+// --------------------------------- Output -------------------------------------
+// Emit the solid returned by NutBase() for the selected size. If no size matched
+// (shouldn’t happen due to Set()), the cascading defaults would end at 0 and
+// Output(0) would do nothing—so all valid UI choices produce a solid.
+Output(res);

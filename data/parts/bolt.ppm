@@ -1,0 +1,80 @@
+// File: bolt.ppm
+// Description: ISO 4014 M16 hex-head bolt (coarse thread)
+// Author: Tim Olson
+// Date: 2025-09-26
+// Notes: Save as a .ppm file and load via the Parametric Parts palette  
+// Confirmed: +1
+
+
+// ---------------- Units ----------------
+Units(1[mm]);
+
+// ---------------- Parameter(s) ----------------
+// Only the Length under head is user-editable.
+L = Parameter("Length (under head)", 80, LINEAR, Interval(16, 130));
+
+Input(L);   // expose to Parametric Parts palette
+
+// ---------------- Constant ISO values for M16 coarse thread ----------------
+S  = 24;        // across-flats size of hex head
+K  = 10.0;      // head thickness
+P  = 2.0;       // thread pitch
+Dw = 22.5;      // under-head washer face diameter
+C  = 0.6;       // washer-face thickness (chamfer depth)
+R  = 0.2001;    // under-head fillet radius
+A  = 6.75;      // thread run-out length (unthreaded under head)
+D  = 16;        // nominal major diameter
+
+// ---------------- Build the bolt ----------------
+
+// --- Hexagonal head --------------------------------------------------
+r = S / (2 * cos(30));   // circumscribed radius of hexagon
+a = S * tan(30);         // vertical offset for hex points
+
+Base2D = Polyline( Point(0, r),
+                   Point(S/2,  a/2),
+                   Point(S/2, -a/2),
+                   Point(0,  -r),
+                   Point(-S/2, -a/2),
+                   Point(-S/2,  a/2),
+                   Point(0,  r) );     // closed loop
+
+Base3D = Thickness(Base2D, K - C);     // head less washer face
+
+// --- 30� chamfers on top & bottom of head -----------------------------
+tgA = tan(30);
+nr  = (2*(K - C) + Dw * tgA) / (2 * tgA);   // cone top radius
+
+ConusOuter1 = Cone((K - C) + (Dw/2)*tgA, nr, 0);          // top bevel
+ConusOuter2 = Move(RotateX(ConusOuter1, 180), 0, 0, K - C); // bottom bevel
+
+head1 = BooleanIntersect(Base3D, ConusOuter1);
+head2 = BooleanIntersect(head1,  ConusOuter2);
+
+// --- Washer face (under-head disc) -----------------------------------
+Hub = Thickness( Move(Circle(Dw/2, 0, 0), 0, 0, K - C), C );
+
+FullHead = BooleanUnion(head2, Hub);
+
+// --- Under-head fillet & first thread turn ---------------------------
+Tore       = Move( Sweep( RotateX(Circle(R, D/2 + R, 0), 90), Circle(D/2, 0, 0) ), 0, 0, K + R );
+wideCyl    = Move( Thickness(Circle(D/2 + R, 0, 0), R ), 0, 0, K );
+cyl1       = Move( Thickness(Circle(D/2, 0, 0), A - R ), 0, 0, K + R );
+cylThread0 = BooleanUnion(cyl1, BooleanSubtract(wideCyl, Tore));
+
+HeadPlusRunout = BooleanUnion(FullHead, cylThread0);
+
+// --- Threaded shank ---------------------------------------------------
+nd   = D - 1.08 * P;                         // thread minor  (for chamfer)
+EdgeBase   = Thickness(Circle(D/2, 0, 0), (D - nd)/2);
+ConusEdge  = Cone(D/2, D/2, 0);              // 45 lead-in
+EdgeChamf  = Move( BooleanIntersect(EdgeBase, ConusEdge),
+                   0, 0, K + L - D/2 );
+
+ThreadCyl  = Move( Thickness(Circle(D/2, 0, 0), L - A - D/2),
+                   0, 0, K + A );
+
+bolt = BooleanUnion( HeadPlusRunout, BooleanUnion(ThreadCyl, EdgeChamf) );
+
+// ---------------- Output ----------------
+Output(bolt);
