@@ -1,0 +1,19 @@
+// File: Cone.ppm
+// Description: Creates a 3D cylinder given a radius and height
+// Author: Tim Olson
+// Date: 2025-09-06
+// Confirmed: +1
+Units(1[in]);  // working units
+
+// ---------- Inputs ----------
+Input(Radius, Height);
+
+// Sizes
+Radius  = Parameter("Radius", 1.0, LINEAR, Interval(0.01, 15));
+Height  = Parameter("Height",      3.0, LINEAR, Interval(0.05, 25));
+
+// ---------- A cylinder is a cone with the top and bottom radius are the same ----------
+cone = Cone(Height, Radius, Radius);     
+
+// ---------- Output ----------
+Output(cone);

@@ -1,0 +1,7 @@
+Author:
+Tim Olson
+Question:
+How do I change the pen thickness of a line?
+Answer:
+Use the SetProperties operation with the PenWidth attribute such as:
+myLineWithWidth =SetProperties(myLine, "PenWidth" = 0.5);

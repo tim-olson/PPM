@@ -1,0 +1,11 @@
+// File: filletBoxOneEdge.ppm
+// Description: 3D 90° angle bracket from a 2D L-profile extruded in +Z (robust fillet)
+// Author: Tim Olson
+// Date: 2025-09-05
+// Confirmed: +1
+
+x = Parameter("size", 5, LINEAR, GreaterThan(0));
+r1 = Parameter("r1", 1, LINEAR, GreaterThan(0));
+b0 = Box(0, 0, 0, x, x, x);
+b2 = G3Chamfer(b0, Point(x/2, x, x), Array(r1, r1+r1));
+Output(b2);

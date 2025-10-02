@@ -1,0 +1,7 @@
+Author:
+Tim Olson
+Question:
+How do I change the pen color of a line to blue?
+Answer:
+Use the SetProperties operation with the PenColor attribute such as:
+myBlueLine =SetProperties(myLine, "PenColor" = 0xFF0000);

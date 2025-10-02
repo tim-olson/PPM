@@ -1,0 +1,21 @@
+Author:
+Tim Olson
+Question:
+What properties can I change with the SetProperties operation?   
+Answer:
+The SetProperties function is used to set the properties of objects using the following format:
+
+SetProperties(<Object>, <”PropertyName”>=PropertyValue, <”PropertyName”>=PropertyValue, ...);
+
+The following PropertyNames are supported:
+1. PenColor		// Set line color using RGB hex code.
+2. Material		// Apply a material from TurboCAD’s material library.
+3. Brush			// Apply brush fill
+4. SPLFRAME 		// show spline control frame
+5. $TWISTANGLE 		// twist angle for a twisted sweep
+6. $SPLINETYPE		// set the spline type such as Bezier Type = 1	
+7. #$AUX@_Contour	// Defines clipping contours for wall insertion used in windows/doors.
+
+The following example sets the pen color and pen width for a box.
+
+RedBox = SetProperties(BaseBox, "PenColor" = 0xff0000, "PenWidth" = 0.5);

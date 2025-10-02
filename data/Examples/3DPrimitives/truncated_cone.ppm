@@ -1,0 +1,20 @@
+// File: Cone.ppm
+// Description: Parametric Truncted cone 
+// Author: Tim Olson
+// Date: 2025-09-06
+// Confirmed: +1
+Units(1[in]);  // working units
+
+// ---------- Inputs ----------
+Input(Rbase, H, Rtop, Cx, Cy, Z0);
+
+// Sizes
+R1  = Parameter("Base Radius", 1.0, LINEAR, Interval(0.01, 15));
+R2  = Parameter("Top Radius",  0.2, LINEAR, Interval(0, 15));
+H   = Parameter("Height",      3.0, LINEAR, Interval(0.05, 25));
+
+// ---------- Build ----------
+cone = Cone(H, R1, R2);     
+
+// ---------- Output ----------
+Output(cone);
