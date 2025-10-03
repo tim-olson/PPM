@@ -1,0 +1,40 @@
+Author:
+Tim Olson
+Question:
+How do I create a single text label using Text(...) with TextFont(...) and TextStyle(...) built from user inputs content, font, size, angle, and justification.
+Answer:
+ 
+// Creates a basic text label with user-defined content, font, size, angle, and justification.
+
+Units(1[in]);                                // Work in inches
+
+// ---- Inputs ----
+Label   = Parameter("Label", "Hello PPM", TEXT);        // Text string
+Font    = Parameter("Font", "Arial", FONT);             // Font family
+Size    = Parameter("Height", 0.25, LINEAR, GreaterThan(0));
+Angle   = Parameter("Angle", 0, ANGULAR, Interval(-90, 90));
+HJust   = Parameter("H Justify", "LEFT",  TEXT, Set("LEFT","CENTER","RIGHT"));
+VJust   = Parameter("V Justify", "BASELINE", TEXT, Set("TOP","MIDDLE","BASELINE","BOTTOM"));
+
+// ---- Build font + style ----
+// TextFont(mode, size, angle, fontName)  // 0 = Standard text
+Tfont   = TextFont(0, Size, Angle, Font);
+
+// Map inputs to legal TextStyle tokens for justification
+Tstyle  = IF(HJust == "LEFT",
+             IF(VJust == "TOP",       TextStyle(LEFT,  TOP),
+             IF(VJust == "MIDDLE",    TextStyle(LEFT,  MIDDLE),
+             IF(VJust == "BASELINE",  TextStyle(LEFT,  BASELINE), TextStyle(LEFT,  BOTTOM)))),
+             IF(HJust == "CENTER",
+             IF(VJust == "TOP",       TextStyle(CENTER,TOP),
+             IF(VJust == "MIDDLE",    TextStyle(CENTER,MIDDLE),
+             IF(VJust == "BASELINE",  TextStyle(CENTER,BASELINE), TextStyle(CENTER,BOTTOM)))),
+             IF(VJust == "TOP",       TextStyle(RIGHT, TOP),
+             IF(VJust == "MIDDLE",    TextStyle(RIGHT, MIDDLE),
+             IF(VJust == "BASELINE",  TextStyle(RIGHT, BASELINE), TextStyle(RIGHT, BOTTOM))))));
+
+// ---- Create text ----
+TxtObj = Text(Label, Tfont, Tstyle);
+
+// ---- Output ----
+Output(TxtObj);
