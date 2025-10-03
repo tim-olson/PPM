@@ -1,0 +1,20 @@
+// Description: linear duplicate a triangle along the x axis
+// Author: Tim Olson
+// Date: 2025-09-05
+// Confirmed : +1
+
+Units(1[in]);
+ 
+// Base triangle at origin
+triangle = Polyline(
+  Point(0,0),
+  Point(1,0),
+  Point(0,1),
+  Point(0,0)
+);
+
+//  move and create 10 copies in dX=2 direction ( Linear copy )
+triangles = Move(triangle, 2,0,0,10) 
+
+
+Output(triangles);

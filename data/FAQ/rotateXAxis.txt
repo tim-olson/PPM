@@ -1,0 +1,7 @@
+Author:
+Tim Olson
+Question:
+How do I rotate an object 90 degrees about the X-axis?
+Answer:
+Use RotateX with a 90-degree angle, for example:
+obj90 = RotateX(myObj, 90); 

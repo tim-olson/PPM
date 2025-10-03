@@ -1,0 +1,41 @@
+Author:
+Tim Olson
+
+Question:
+How do I round and chamfer different edges of a box with different radii?
+
+Answer:
+Use G3Fillet and G3Chamfer with arrays of pick points and radii. For example:
+
+// Parameters
+x = Parameter("Size", 8, LINEAR, GreaterThan(0));
+rF = Parameter("Fillet R", 1, LINEAR, Interval(0.1, x/3));
+rC = Parameter("Chamfer R", 0.5, LINEAR, Interval(0.05, x/3));
+
+// Start with a box
+g0 = Box(0,0,0, x, x, x);
+
+// Round several edges near these face-pick points
+g1 = G3Fillet(
+  g0,
+  Array(
+    Point(x/2, 0,   0),    // pick points on/near target edges
+    Point(x,   x/2, 0),
+    Point(x/2, x,   x)
+  ),
+  Array(rF, rF*1.5, rF*0.75) // different radii per picked edge set
+);
+
+// Chamfer different edges (different pick points, different radii)
+g2 = G3Chamfer(
+  g1,
+  Array(
+    Point(0,   x/2,  x),
+    Point(x/2, 0,    x/2)
+  ),
+  Array(rC, rC*2)
+);
+
+ 
+
+Output(g2);

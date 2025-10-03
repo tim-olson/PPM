@@ -1,0 +1,10 @@
+ 
+Author:
+Tim Olson
+Question:
+How do I set script units to millimeters or inches?
+Answer:
+Use the Units function at the top of your script, for example:
+Units(1[mm]);    
+To set to inches use:
+Units(1[in]);       

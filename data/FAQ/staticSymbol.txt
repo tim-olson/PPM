@@ -1,0 +1,7 @@
+Author:
+Tim Olson
+Question:
+How do I load a static symbol from the Macro folder?
+Answer:
+Use StaticSymbol with just the filename (it assumes the Macro subfolder):
+S = StaticSymbol("ExternalSymbol.tcw");  

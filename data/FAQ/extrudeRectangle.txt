@@ -1,0 +1,7 @@
+Author:
+Tim Olson
+Question:
+How do I turn a 2D rectangle into a 3D box?
+Answer:
+Use Thickness on a Rectangle and output the result, for example:
+Box = Thickness(Rectangle(10, 6), 3);  

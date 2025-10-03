@@ -1,0 +1,7 @@
+ 
+Author:
+Tim Olson
+Question:
+Does PPM support a mirror operation?
+Answer:
+NO.
