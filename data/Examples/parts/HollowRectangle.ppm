@@ -1,0 +1,40 @@
+// File: RoundedRectangle.ppm
+// Description: Creates a rounded rectangle using polyline L x W x H and subtracts an inset box to make a hollow shell of thickness T. This uses boolean subtract instead of G3Shell.
+// Author: Tim Olson
+// Date: 2025-10-02
+// Confirmed: +1
+
+
+// ---------------- Parameters ----------------
+L = Parameter("Length", 10, LINEAR, GreaterThan(0));      // overall length (X)
+W = Parameter("Width",  6,  LINEAR, GreaterThan(0));      // overall width (Y)
+H = Parameter("Height", 4,  LINEAR, GreaterThan(0));      // overall height (Z)
+T = Parameter("Wall Thickness", 0.5, LINEAR, GreaterThan(0)); // shell thickness
+
+// Optional: lock drawing units explicitly (uncomment one)
+// Units(1[in]);     // inches
+// Units(1[mm]);     // millimeters
+
+// ---------------- Build outer box ----------------
+// Use the documented "box via Thickness" pattern:
+// A rectangle centered at (L/2, W/2) spans X:0..L, Y:0..W; add thickness H along +Z.
+OuterRect = Rectangle(L, W, L/2, W/2);   // 2D footprint from (0,0) to (L,W)
+OuterBox  = Thickness(OuterRect, H);     // 3D box 0..H in Z
+
+// ---------------- Build inner (subtracted) box ----------------
+// Inner dimensions are inset by T on all six faces: (T .. L-T), (T .. W-T), (T .. H-T).
+
+Li = L - 2*T;                   // inner length
+Wi = W - 2*T;                   // inner width
+
+InnerRect = Rectangle(Li, Wi, L/2, W/2);  // still centered at (L/2, W/2)
+InnerCore = Thickness(InnerRect, H);     // thickness = inner height
+InnerBox  = Move(InnerCore, 0, 0, T);     // shift up by T so Z spans (T .. H-T)
+
+// ---------------- Subtract to hollow ----------------
+Hollow = BooleanSubtract(OuterBox, InnerBox);
+
+// ---------------- Output ----------------
+Output(Hollow);
+
+

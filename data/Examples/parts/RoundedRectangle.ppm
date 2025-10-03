@@ -1,0 +1,51 @@
+// RoundedHollowBox_Polyline.ppm
+// L x W x H rounded-corner box from a 2D filleted polyline, hollowed by Boolean subtraction.
+
+// ---------------- Parameters ----------------
+L = Parameter("Length", 10, LINEAR, GreaterThan(0));         // overall length (X)
+W = Parameter("Width",   6,  LINEAR, GreaterThan(0));         // overall width (Y)
+H = Parameter("Height",  4,  LINEAR, GreaterThan(0));         // overall height (Z)
+T = Parameter("Wall Thickness", 0.5, LINEAR, GreaterThan(0)); // shell thickness
+R = Parameter("Corner Radius", 0.5, LINEAR, GreaterThan(0));  // outer corner radius
+
+// Optional units
+// Units(1[in]);  // inches
+// Units(1[mm]);  // millimeters
+
+
+
+// --- Define polyline with fillets ---
+Outer2D = Polyline(
+  Point(0,0),    // lower left corner
+  Point(L,0),    // lower right corner
+  Fillet(R),    // fillet at bottom right
+  Point(L,H),    // upper right corner
+  Fillet(R),    // fillet at top right
+  Point(0,H),    // upper left corner
+  Fillet(R),    // fillet at top left
+  Point(0,0),    // close shape
+  Fillet(R)     // fillet at start/end
+);
+
+Outer3D = Thickness(Outer2D, H); // extrude upward +Z by H
+
+// ---------------- Inner rounded rectangle (for subtraction) ----------------
+Inner2D = Polyline(
+  Point(T,T),    // lower left corner
+  Point(L-T,T),    // lower right corner
+  Fillet(R),    // fillet at bottom right
+  Point(L-T,H-T),    // upper right corner
+  Fillet(R),    // fillet at top right
+  Point(T,H-T),    // upper left corner
+  Fillet(R),    // fillet at top left
+  Point(T,T),    // close shape
+  Fillet(R)     // fillet at start/end
+);
+InnerPrism = Thickness(Inner2D, H);   // full height
+InnerShift = Move(InnerPrism, 0, 0, T); // raise by T so top is open
+
+// ---------------- Hollow by subtraction ----------------
+Hollow = BooleanSubtract(Outer3D, InnerShift);
+
+// ---------------- Output ----------------
+Output(Hollow);
