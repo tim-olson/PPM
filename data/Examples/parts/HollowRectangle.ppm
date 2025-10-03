@@ -1,5 +1,5 @@
 // File: RoundedRectangle.ppm
-// Description: Creates a rounded rectangle using polyline L x W x H and subtracts an inset box to make a hollow shell of thickness T. This uses boolean subtract instead of G3Shell.
+// Description: Creates a hollow rounded rectangle using polyline L x W x H and subtracts an inset box to make a hollow shell of thickness T. This uses boolean subtract instead of G3Shell.
 // Author: Tim Olson
 // Date: 2025-10-02
 // Confirmed: +1
