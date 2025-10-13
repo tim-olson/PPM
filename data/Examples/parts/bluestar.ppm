@@ -1,0 +1,64 @@
+// ---------------------------------------------------------
+// 5-Point Star  Parametric Part
+// ---------------------------------------------------------
+// Creates a planar 5-pointed star (tip-to-tip width = Size)
+// and extrudes it along +Z by Depth.
+// The golden-ratio inner-radius factor (0.381966) is used
+// so the star remains regular at any scale.
+// ---------------------------------------------------------
+// Author : Tim Olson  
+//  
+// ---------------------------------------------------------
+
+// ------------------- Units --------------------------------
+Units(1[in]);       // script uses inches
+
+// --------------- User-Editable Parameters -----------------
+Size   = Parameter("Star Width", 5,  LINEAR, GreaterThan(0)); // tip-to-tip width
+Depth  = Parameter("Depth",      2,  LINEAR, GreaterThan(0)); // extrusion depth
+
+// ----------------- Derived Dimensions ---------------------
+R  = Size / 2;               // outer radius
+r  = R * 0.381966;           // inner radius (golden ratio)
+
+// Pre-computed cosine / sine coefficients for the star points
+// (angles start at 90� and proceed CCW; values rounded to 9 dp)
+c0 =   0.000000000;  s0 =  1.000000000;   //  90�
+c1 =  -0.587785252;  s1 =  0.809016994;   // 126�
+c2 =  -0.951056516;  s2 =  0.309016994;   // 162�
+c3 =  -0.951056516;  s3 = -0.309016994;   // 198�
+c4 =  -0.587785252;  s4 = -0.809016994;   // 234�
+c5 =   0.000000000;  s5 = -1.000000000;   // 270�
+c6 =   0.587785252;  s6 = -0.809016994;   // 306�
+c7 =   0.951056516;  s7 = -0.309016994;   // 342�
+c8 =   0.951056516;  s8 =  0.309016994;   //  18�
+c9 =   0.587785252;  s9 =  0.809016994;   //  54�
+
+// ------------------ 2D Star Outline -----------------------
+Star2D = Polyline(
+    Point( R*c0,  R*s0),
+    Point( r*c1,  r*s1),
+    Point( R*c2,  R*s2),
+    Point( r*c3,  r*s3),
+    Point( R*c4,  R*s4),
+    Point( r*c5,  r*s5),
+    Point( R*c6,  R*s6),
+    Point( r*c7,  r*s7),
+    Point( R*c8,  R*s8),
+    Point( r*c9,  r*s9),
+    Point( R*c0,  R*s0)   // close polyline
+);
+
+// --------------- Extrude (Thickness) ----------------------
+Star3D = Thickness(Star2D, Depth);  // positive Z
+
+// When using hex, blue color is defined as 0xff0000
+// When using hex, red color is defined  as 0x0000ff
+// When using hex, green color is defined  as 0x00ff00
+// --------------- Appearance Properties --------------------
+BlueStar = SetProperties(Star3D,
+              "PenColor" = 0xff0000,          // pure blue outline
+              "Material" = "Plastic\\Blue");  // any installed blue material
+
+// ---------------------- Output ----------------------------
+Output(BlueStar);
