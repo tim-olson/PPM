@@ -1,0 +1,74 @@
+// Name: Bezier_6Point_2D.ppm
+// Description: Creates a 2-D quintic Bezier spline (six control points) in the XY plane.
+// Author: PPM Assistant
+// Date: 2025-10-13
+// Notes: Parameters expose the XY coordinates of control points P0…P5.
+// Confirmed: +0               (increment after live testing)
+
+// ------------------------------------------------------------------
+//  Units
+// ------------------------------------------------------------------
+Units(1[in]);   // Script units = inches
+
+// ------------------------------------------------------------------
+//  Parameters – editable control-point coordinates
+// ------------------------------------------------------------------
+// Point 0 (start)
+P0X = Parameter("P0 X", 0.0, LINEAR, Interval(-100, 100));
+P0Y = Parameter("P0 Y", 0.0, LINEAR, Interval(-100, 100));
+
+// Point 1 (handle 1)
+P1X = Parameter("P1 X", 1.0, LINEAR, Interval(-100, 100));
+P1Y = Parameter("P1 Y", 2.0, LINEAR, Interval(-100, 100));
+
+// Point 2 (handle 2)
+P2X = Parameter("P2 X", 3.0, LINEAR, Interval(-100, 100));
+P2Y = Parameter("P2 Y", 3.0, LINEAR, Interval(-100, 100));
+
+// Point 3 (handle 3)
+P3X = Parameter("P3 X", 5.0, LINEAR, Interval(-100, 100));
+P3Y = Parameter("P3 Y", 3.0, LINEAR, Interval(-100, 100));
+
+// Point 4 (handle 4)
+P4X = Parameter("P4 X", 7.0, LINEAR, Interval(-100, 100));
+P4Y = Parameter("P4 Y", 1.5, LINEAR, Interval(-100, 100));
+
+// Point 5 (end)
+P5X = Parameter("P5 X", 8.0, LINEAR, Interval(-100, 100));
+P5Y = Parameter("P5 Y", 0.0, LINEAR, Interval(-100, 100));
+
+// ------------------------------------------------------------------
+//  Input  (enables reuse in macros)
+// ------------------------------------------------------------------
+Input(
+  P0X, P0Y, P1X, P1Y, P2X, P2Y,
+  P3X, P3Y, P4X, P4Y, P5X, P5Y
+);
+
+// ------------------------------------------------------------------
+//  Build geometry
+// ------------------------------------------------------------------
+Q0 = Point(P0X, P0Y);
+Q1 = Point(P1X, P1Y);
+Q2 = Point(P2X, P2Y);
+Q3 = Point(P3X, P3Y);
+Q4 = Point(P4X, P4Y);
+Q5 = Point(P5X, P5Y);
+
+// Create a spline through all six control points
+SPL = Spline(Q0, Q1, Q2, Q3, Q4, Q5);
+
+// ------------------------------------------------------------------
+//  Properties – force Bezier evaluation & basic styling
+// ------------------------------------------------------------------
+Bezier2D = SetProperties(
+  SPL,
+  "$SPLINETYPE" = 1,   // 1 = Bezier
+  "PenColor"   = "Blue",
+  "PenWidth"   = 0.02[in]
+);
+
+// ------------------------------------------------------------------
+//  Output
+// ------------------------------------------------------------------
+Output(Bezier2D);
