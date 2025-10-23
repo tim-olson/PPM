@@ -12,6 +12,7 @@ Contains FAQ information and example Parametric Part Modeling (PPM) scripts for 
 // Confirmed: +0 increment this value when tested  
 
 You must provide inline documentation such that the AI will learn the process of  the  script.  
+Use a descriptive file name to allow the AI identify your script context
 
 2. FAQ Format:  
 One FAQ per text file.  If you are extending or modifying an existing FAQ, add your name to the Modified section.  

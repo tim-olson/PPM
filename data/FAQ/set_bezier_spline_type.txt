@@ -1,0 +1,20 @@
+Author:
+Tim Olson
+
+Question:
+How do I create a bezier spline.
+
+Answer:
+ 
+Use the SetProperties command and assign the $SPLINETYPE to 1.
+
+Example:
+
+
+// Set the spline as Bezier and set simple display attributes
+Bezier2D = SetProperties(  SPL, "$SPLINETYPE" = 1);
+
+
+
+ 
+ 
