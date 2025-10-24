@@ -1,0 +1,73 @@
+// Name: TwistedStarColumn.ppm
+// Description:    Builds a 2D five-point star profile and sweeps it along a straight
+// line, applying twist via SetProperties("$TWISTANGLE").
+// Angle for $TWISTANGLE is in radians; we use 2*PI*Turns.
+// Author: Tim Olson
+// Date: October 24, 2025
+// Notes: none
+// Confirmed: +1
+// ---------------------------------------------------------
+// Twisted Star Column
+// ---------------------------------------------------------
+
+Units(1[in]);  // inches
+
+// ---------------- Parameters ----------------
+R   = Parameter("Outer Radius", 2.0, LINEAR, GreaterThan(0));
+F   = Parameter("Inner Radius Factor", 0.381966, LINEAR, Interval(0.2, 0.9));
+H   = Parameter("Height", 6.0, LINEAR, GreaterThan(0));
+T   = Parameter("Twist Turns", "1", Set("0", "0.5", "1", "1.5", "2", "3", "4"));
+Rot = Parameter("Rotation (deg)", 90.0, ANGULAR, Interval(-180, 180));
+
+// Present inputs in the PPM palette
+Input(R, F, H, T, Rot);
+
+// ---------------- Star (2D) ----------------
+r    = F * R;       // inner radius
+step = 36.0;        // degrees between successive vertices
+t0   = Rot;         // starting angle in degrees (tip-up at 90)
+
+P0 = Point(0 + R * cos(t0 + 0*step),   0 + R * sin(t0 + 0*step));
+P1 = Point(0 + r * cos(t0 + 1*step),   0 + r * sin(t0 + 1*step));
+P2 = Point(0 + R * cos(t0 + 2*step),   0 + R * sin(t0 + 2*step));
+P3 = Point(0 + r * cos(t0 + 3*step),   0 + r * sin(t0 + 3*step));
+P4 = Point(0 + R * cos(t0 + 4*step),   0 + R * sin(t0 + 4*step));
+P5 = Point(0 + r * cos(t0 + 5*step),   0 + r * sin(t0 + 5*step));
+P6 = Point(0 + R * cos(t0 + 6*step),   0 + R * sin(t0 + 6*step));
+P7 = Point(0 + r * cos(t0 + 7*step),   0 + r * sin(t0 + 7*step));
+P8 = Point(0 + R * cos(t0 + 8*step),   0 + R * sin(t0 + 8*step));
+P9 = Point(0 + r * cos(t0 + 9*step),   0 + r * sin(t0 + 9*step));
+
+Star2D = Polyline(P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P0);
+
+// Optional 2D fill for clarity
+Star2D_v = SetProperties(Star2D, "BrushStyle" = "SOLID");
+
+// ---------------- Sweep Path (straight line in XY) ----------------
+// Path runs along +Y from origin by H units (lies in the XY plane)
+Path = Polyline(Point(0,0,0), Point(0,H,0));
+
+// Orient profile to face XY path: rotate XY profile into XZ plane
+Profile = RotateX(Star2D, 90);
+
+// ---------------- Sweep and Twist ----------------
+Body = Sweep(Profile, Path);
+
+// Resolve turn selection into a numeric value
+Turns = IF(T=="0",   0,
+       IF(T=="0.5", 0.5,
+       IF(T=="1",   1,
+       IF(T=="1.5", 1.5,
+       IF(T=="2",   2,
+       IF(T=="3",   3, 4))))));
+
+// Apply twist (radians)
+Twisted = SetProperties(Body, "$TWISTANGLE" = 2*PI*Turns);
+
+// Optional helpers for visualization
+Path_v    = SetProperties(Path,    "PenColor" = 0x0000FF, "PenWidth" = 0.03);
+Profile_v = SetProperties(Profile, "PenColor" = 0x00AA00, "PenWidth" = 0.03);
+
+// ---------------- Output ----------------
+Output(Path_v, Profile_v, Twisted);
+

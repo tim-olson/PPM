@@ -1,0 +1,126 @@
+// Name: conic_spline_20_points_2D.ppm
+// Description:  
+// 90-degree conic approximated by a 20-point spline
+// Interpretation: Rho is used as the rational weight (w) of the middle control point
+// of a quadratic rational Bezier conic segment between (R,0) and (0,R) with P1=(R,R).
+// The curve is sampled at 20 uniform parameters (including endpoints) and interpolated with Spline.
+// -----------------------------
+// RHO RANGE & MEANING (IMPORTANT)
+// -----------------------------
+// Valid mathematical domain: RHO ∈ (0, ∞)  (strictly positive)
+//   • 0 < RHO < 1  → Elliptic conic (tighter toward the corner).
+//     - Special case for a true quarter circle: RHO = cos(45°) = √2/2 ≈ 0.70710678
+//   • RHO = 1      → Parabolic conic.
+//   • RHO > 1      → Hyperbolic conic (opens away; not a circle/ellipse).
+//   • RHO ≤ 0      → Invalid for this construction (non-conic / may self-intersect).
+//
+// Author: Tim Olson
+// Date: September 7, 2025
+// Notes: none
+// Confirmed: +1
+
+
+Units(1[mm]);
+
+// ---------- Parameters ----------
+R   = Parameter("Scale/Radius", 100.0, LINEAR, GreaterThan(0));
+RHO = Parameter("Rho (shape weight)", 3, LINEAR, Interval(0.01, 10));
+ROT = Parameter("Rotation (deg)", 0, ANGULAR, Interval(-360, 360));
+CTR = ParameterPoint(0, 0, 0);
+
+// Optional palette exposure
+Input(R, RHO, ROT, CTR);
+
+// ---------- Setup ----------
+CX = PointX(CTR);  CY = PointY(CTR);
+
+// Endpoints and middle control for the conic in the first quadrant
+P0x = R; P0y = 0; // start
+P1x = R; P1y = R; // middle control (on angle bisector)
+P2x = 0; P2y = R; // end
+w = RHO; // rational weight at middle control point
+
+// Helper macro: compute a sample using expanded variables (no loops available in PPM)
+// For t in [0..1],
+//  u = 1 - t;
+//  B0 = u^2;
+//  B1 = 2*w*t*u;
+//  B2 = t^2;
+//  denom = B0 + B1 + B2;
+//  x = (B0*P0x + B1*P1x + B2*P2x)/denom;
+//  y = (B0*P0y + B1*P1y + B2*P2y)/denom;
+
+// ---------- Sample 20 points (t = i/19, i=0..19) ----------
+// t0
+u0 = 1 - 0.0;   b00 = u0*u0;  b01 = 2*w*0.0*u0;  b02 = 0.0*0.0;  d0 = b00 + b01 + b02;
+x0 = (b00*P0x + b01*P1x + b02*P2x)/d0;  y0 = (b00*P0y + b01*P1y + b02*P2y)/d0;  Q0 = Point(x0, y0);
+// t1
+T1 = 1.0/19.0;  u1 = 1 - T1;  b10 = u1*u1;  b11 = 2*w*T1*u1;  b12 = T1*T1;  d1 = b10 + b11 + b12;
+x1 = (b10*P0x + b11*P1x + b12*P2x)/d1;  y1 = (b10*P0y + b11*P1y + b12*P2y)/d1;  Q1 = Point(x1, y1);
+// t2
+T2 = 2.0/19.0;  u2 = 1 - T2;  b20 = u2*u2;  b21 = 2*w*T2*u2;  b22 = T2*T2;  d2 = b20 + b21 + b22;
+x2 = (b20*P0x + b21*P1x + b22*P2x)/d2;  y2 = (b20*P0y + b21*P1y + b22*P2y)/d2;  Q2 = Point(x2, y2);
+// t3
+T3 = 3.0/19.0;  u3 = 1 - T3;  b30 = u3*u3;  b31 = 2*w*T3*u3;  b32 = T3*T3;  d3 = b30 + b31 + b32;
+x3 = (b30*P0x + b31*P1x + b32*P2x)/d3;  y3 = (b30*P0y + b31*P1y + b32*P2y)/d3;  Q3 = Point(x3, y3);
+// t4
+T4 = 4.0/19.0;  u4 = 1 - T4;  b40 = u4*u4;  b41 = 2*w*T4*u4;  b42 = T4*T4;  d4 = b40 + b41 + b42;
+x4 = (b40*P0x + b41*P1x + b42*P2x)/d4;  y4 = (b40*P0y + b41*P1y + b42*P2y)/d4;  Q4 = Point(x4, y4);
+// t5
+T5 = 5.0/19.0;  u5 = 1 - T5;  b50 = u5*u5;  b51 = 2*w*T5*u5;  b52 = T5*T5;  d5 = b50 + b51 + b52;
+x5 = (b50*P0x + b51*P1x + b52*P2x)/d5;  y5 = (b50*P0y + b51*P1y + b52*P2y)/d5;  Q5 = Point(x5, y5);
+// t6
+T6 = 6.0/19.0;  u6 = 1 - T6;  b60 = u6*u6;  b61 = 2*w*T6*u6;  b62 = T6*T6;  d6 = b60 + b61 + b62;
+x6 = (b60*P0x + b61*P1x + b62*P2x)/d6;  y6 = (b60*P0y + b61*P1y + b62*P2y)/d6;  Q6 = Point(x6, y6);
+// t7
+T7 = 7.0/19.0;  u7 = 1 - T7;  b70 = u7*u7;  b71 = 2*w*T7*u7;  b72 = T7*T7;  d7 = b70 + b71 + b72;
+x7 = (b70*P0x + b71*P1x + b72*P2x)/d7;  y7 = (b70*P0y + b71*P1y + b72*P2y)/d7;  Q7 = Point(x7, y7);
+// t8
+T8 = 8.0/19.0;  u8 = 1 - T8;  b80 = u8*u8;  b81 = 2*w*T8*u8;  b82 = T8*T8;  d8 = b80 + b81 + b82;
+x8 = (b80*P0x + b81*P1x + b82*P2x)/d8;  y8 = (b80*P0y + b81*P1y + b82*P2y)/d8;  Q8 = Point(x8, y8);
+// t9
+T9 = 9.0/19.0;  u9 = 1 - T9;  b90 = u9*u9;  b91 = 2*w*T9*u9;  b92 = T9*T9;  d9 = b90 + b91 + b92;
+x9 = (b90*P0x + b91*P1x + b92*P2x)/d9;  y9 = (b90*P0y + b91*P1y + b92*P2y)/d9;  Q9 = Point(x9, y9);
+// t10
+T10 = 10.0/19.0;  u10 = 1 - T10;  b100 = u10*u10;  b101 = 2*w*T10*u10;  b102 = T10*T10;  d10 = b100 + b101 + b102;
+x10 = (b100*P0x + b101*P1x + b102*P2x)/d10;  y10 = (b100*P0y + b101*P1y + b102*P2y)/d10;  Q10 = Point(x10, y10);
+// t11
+T11 = 11.0/19.0;  u11 = 1 - T11;  b110 = u11*u11;  b111 = 2*w*T11*u11;  b112 = T11*T11;  d11 = b110 + b111 + b112;
+x11 = (b110*P0x + b111*P1x + b112*P2x)/d11;  y11 = (b110*P0y + b111*P1y + b112*P2y)/d11;  Q11 = Point(x11, y11);
+// t12
+T12 = 12.0/19.0;  u12 = 1 - T12;  b120 = u12*u12;  b121 = 2*w*T12*u12;  b122 = T12*T12;  d12 = b120 + b121 + b122;
+x12 = (b120*P0x + b121*P1x + b122*P2x)/d12;  y12 = (b120*P0y + b121*P1y + b122*P2y)/d12;  Q12 = Point(x12, y12);
+// t13
+T13 = 13.0/19.0;  u13 = 1 - T13;  b130 = u13*u13;  b131 = 2*w*T13*u13;  b132 = T13*T13;  d13 = b130 + b131 + b132;
+x13 = (b130*P0x + b131*P1x + b132*P2x)/d13;  y13 = (b130*P0y + b131*P1y + b132*P2y)/d13;  Q13 = Point(x13, y13);
+// t14
+T14 = 14.0/19.0;  u14 = 1 - T14;  b140 = u14*u14;  b141 = 2*w*T14*u14;  b142 = T14*T14;  d14 = b140 + b141 + b142;
+x14 = (b140*P0x + b141*P1x + b142*P2x)/d14;  y14 = (b140*P0y + b141*P1y + b142*P2y)/d14;  Q14 = Point(x14, y14);
+// t15
+T15 = 15.0/19.0;  u15 = 1 - T15;  b150 = u15*u15;  b151 = 2*w*T15*u15;  b152 = T15*T15;  d15 = b150 + b151 + b152;
+x15 = (b150*P0x + b151*P1x + b152*P2x)/d15;  y15 = (b150*P0y + b151*P1y + b152*P2y)/d15;  Q15 = Point(x15, y15);
+// t16
+T16 = 16.0/19.0;  u16 = 1 - T16;  b160 = u16*u16;  b161 = 2*w*T16*u16;  b162 = T16*T16;  d16 = b160 + b161 + b162;
+x16 = (b160*P0x + b161*P1x + b162*P2x)/d16;  y16 = (b160*P0y + b161*P1y + b162*P2y)/d16;  Q16 = Point(x16, y16);
+// t17
+T17 = 17.0/19.0;  u17 = 1 - T17;  b170 = u17*u17;  b171 = 2*w*T17*u17;  b172 = T17*T17;  d17 = b170 + b171 + b172;
+x17 = (b170*P0x + b171*P1x + b172*P2x)/d17;  y17 = (b170*P0y + b171*P1y + b172*P2y)/d17;  Q17 = Point(x17, y17);
+// t18
+T18 = 18.0/19.0;  u18 = 1 - T18;  b180 = u18*u18;  b181 = 2*w*T18*u18;  b182 = T18*T18;  d18 = b180 + b181 + b182;
+x18 = (b180*P0x + b181*P1x + b182*P2x)/d18;  y18 = (b180*P0y + b181*P1y + b182*P2y)/d18;  Q18 = Point(x18, y18);
+// t19
+T19 = 1.0;  u19 = 1 - T19;  b190 = u19*u19;  b191 = 2*w*T19*u19;  b192 = T19*T19;  d19 = b190 + b191 + b192;
+x19 = (b190*P0x + b191*P1x + b192*P2x)/d19;  y19 = (b190*P0y + b191*P1y + b192*P2y)/d19;  Q19 = Point(x19, y19);
+ 
+// ---------- Build spline through sampled points ----------
+S0 = Spline(Q0,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14,Q15,Q16,Q17,Q18,Q19);
+ 
+// Optional: set spline to Bezier type for display/evaluation style per FAQ
+S1 = SetProperties(S0, "$SPLINETYPE" = 1);
+ 
+// ---------- Orient and place ----------
+S2 = RotateZ(S1, ROT, 0, 0);      // rotate in XY about origin
+S3 = Move(S2, CX, CY);            // translate to center
+ 
+// ---------- Output ----------
+Output(S3);
