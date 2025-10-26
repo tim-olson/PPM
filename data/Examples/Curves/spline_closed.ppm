@@ -1,0 +1,18 @@
+// Description: Create a closed spline using the SetProperties "Closed" =1 parameter.
+// Author: Tim Olson 
+// Date :2025-10-26
+// Notes:   
+// Confirmed : 0
+
+P0  = Point(0,  1,  0);
+P1  = Point(3,  3,  0);
+P2  = Point(6,  3,  0);
+P3  = Point(9,  1,  0);
+
+// Build spline through the 12 control points
+SPL = Spline(P0, P1, P2, P3);
+ 
+SPLClosed = SetProperties(SPL, "Closed"  = 1, "PenColor" = 0xff);
+ 
+// Output result
+Output(SPL, SPLClosed);
