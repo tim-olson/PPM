@@ -1,0 +1,64 @@
+ PPM: Summarize documents and sources . Sections shall Include:
+1) Script Basics
+	•	Syntax rules, comments with //, identifiers, reserved words.
+	•	Show minimal script structure.
+	•	Parameters with Parameter() including examples for:
+	◦	LINEAR, ANGULAR, TEXT, COLOR, MATERIAL, CHECKBOX.
+	•	Input/Output usage patterns.
+	•	Units: Units(1[in]), Units(1[mm]).
+	•	RefPoint for placement.
+	•	Tables:
+	◦	Reserved Words
+	◦	Common Literals & Notation
+	◦	Parameter Types & Example Declarations
+	•	Snippets: Minimal script, parameter declarations, unit switch, RefPoint.
+2) 2D Geometry Functions:
+	•	Cover: Circle, Rectangle, Polyline, Arc0, Arc1, Fillet.
+	•	Include an example of a rectangle with rounded corners.
+	•	Tables: Function | Arguments | Purpose/Notes.
+	•	Snippets: One minimal runnable example per function.
+3) 3D Creation Functions:
+	•	Cover: Thickness, Sweep, Sphere, Cone, Box (custom function).
+	•	Include examples of:
+	◦	A simple 3D box.
+	◦	A sweep.
+	•	Tables: Function | Input Profiles/Paths | Result | Notes.
+	•	Snippets: Box creation, sweep from a profile along a path.
+4) 3D Boolean Operations:
+	•	BooleanUnion, BooleanSubtract, BooleanIntersect.
+	•	Include an example subtracting a cylinder from a sphere.
+	•	Tables: Operation | Left | Right | Result | Common pitfalls.
+	•	Snippets: Each boolean with minimal geometry setup.
+5) 3D Modification Functions:
+	•	G3Fillet, G3Chamfer, G3Offset, G3Shell, G3Bend.
+	•	Provide simple examples for each.
+	•	Tables: Modifier | Arguments | Affects | Notes/Limitations.
+	•	Snippets: One concise, runnable example per modifier.
+6) Transformations:
+	•	Move, RotateX / RotateY / RotateZ, and optional Scale/Shear (if supported).
+	•	Include an example rotating a circle and moving it.
+	•	Tables: Transform | Args | Applies to | Notes/Order of ops.
+	•	Snippets: Combine rotate + move on a simple primitive.
+7) SetProperties() (Styling & Attributes):
+	•	PenColor, PenWidth, Brush, Material, Solid toggle.
+	•	AUX properties (e.g., #$AUX@_Contour).
+	•	Include an example with differently styled boxes.
+	•	Tables: Property | Value Type | Effect | Example.
+	•	Snippets: Styling before/after creation; AUX application.
+8) Text Functions:
+	•	Text, TextFont, TextStyle.
+	•	Include bold, italic, rotated text example.
+	•	Tables: Function | Args | Notes (alignment, rotation).
+	•	Snippets: Labeled annotation with style changes.
+9) Math & Logic Helpers:
+	•	IF, min(), max(), Mod(), Div(), Array().
+	•	Example: IF condition switching Rectangle(L,H) vs Rectangle(H,L).
+	•	Tables: Helper | Signature | Purpose | Example.
+	•	Snippets: Conditional geometry; simple arrays.
+10) Grouping & Symbols:
+	•	Group().
+	•	StaticSymbol(), FolderList().
+	•	Custom functions via Macro folder (brief note).
+	•	Tables: Tool | Use case | Notes.
+	•	Snippets: Group multiple parts; reference a static symbol.
+
