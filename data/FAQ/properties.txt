@@ -15,6 +15,7 @@ The following PropertyNames are supported:
 5. $TWISTANGLE 		// twist angle for a twisted sweep
 6. $SPLINETYPE		// set the spline type such as Bezier Type = 1	
 7. #$AUX@_Contour	// Defines clipping contours for wall insertion used in windows/doors.
+8. Closed        // set the spline to close start and end point together
 
 The following example sets the pen color and pen width for a box.
 
